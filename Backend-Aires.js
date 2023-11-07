@@ -33,6 +33,8 @@ class   ProductManager {
         }
     this.products.push(product);
 
+    return this.products;
+
     }
     
     
@@ -41,7 +43,7 @@ class   ProductManager {
         if(product){
             return product;
         }else{
-            return 'Not found';
+            return ['Not found'];
         }
     }
 }
