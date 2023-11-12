@@ -1,0 +1,20 @@
+[
+	{
+		"title": "Mouse",
+		"description": "Mouse Logitech",
+		"price": 3520,
+		"thumbnail": "mouse-logitech.pngd",
+		"code": "LogiM",
+		"stock": 25,
+		"id": 1
+	},
+	{
+		"title": "Smartphone",
+		"description": "Motorla g50",
+		"price": 3520,
+		"thumbnail": "motog50.png",
+		"code": "Mg50",
+		"stock": 18,
+		"id": 2
+	}
+]
