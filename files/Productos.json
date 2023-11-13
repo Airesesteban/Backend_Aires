@@ -8,7 +8,7 @@
 			"code": "Mg50",
 			"stock": 18
 		},
-		"title": "Mouse",
+		"title": "SUperMouseSS",
 		"description": "Mouse Logitech",
 		"price": 3520,
 		"thumbnail": "mouse-logitech.pngd",
@@ -33,5 +33,14 @@
 		"code": "Mg50",
 		"stock": 18,
 		"id": 3
+	},
+	{
+		"title": "Radio",
+		"description": "fm",
+		"price": 1000,
+		"thumbnail": "radiofm.png",
+		"code": "RFM",
+		"stock": 36,
+		"id": 4
 	}
 ]

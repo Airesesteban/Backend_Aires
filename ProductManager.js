@@ -16,6 +16,7 @@ class   ProductManager {
     }
    
     addProduct = async (producto) => {
+
         const products = await this.getProducts();
         if (products.length === 0){
             producto.id = 1
@@ -95,42 +96,29 @@ class   ProductManager {
     }
 }
 
-//Ejemplos para hacer las pruebas
+// Anotaciones para ahcer las pruebas
 
-/* const productManager = new ProductManager();
+/*   const manager = new ProductManager();
 
-productManager.addProduct('Mouse', 3520, 'Mouse Logitech', 'mouse-logitech.png', 'LogiM', 25);
-productManager.addProduct('Smartphone', 220000, 'Motorla g50', 'motog50.png', 'Mg50', 18);
-productManager.addProduct('Smartphone', 220000, 'Motorla g50', 'motog50.png', 'Mg50', 18);
-//Traer todos los productos
-console.log(productManager.getProducts()); */
-
-// Traer productos por ID
-/* console.log(productManager.getProductById(1));
-console.log(productManager.getProductById(2));
-console.log(productManager.getProductById(3));  */// Retorna "Not Found"
-
- // const manager = new ProductManager();
-
-/* const env = async () => {
+ const env = async () => {
  
      let primerConsulta = await manager.getProducts();
     console.log(primerConsulta);  
     let product = {
-        title: 'Smartphone',
-        description: 'Motorola g50',
-        price: 3520,
-        thumbnail: 'motog50.png',
-        code:'Mg50',
-        stock: 18
+        title: 'Radio',
+        description: 'fm',
+        price: 1000,
+        thumbnail: 'radiofm.png',
+        code:'RFM',
+        stock: 36
     }
-    let result = await manager.updateProduct(1,product);
+    let result = await manager.addProduct(product);
     console.log(result);
 } 
 
-env() */
+env()  */
 
-const manager = new ProductManager();
+/* const manager = new ProductManager();
 
-let result = await manager.updateProduct(1,precio,1);
-console.log(result); 
+let result = await manager.updateProduct(1,"SUperMouseSS");
+console.log(result);  */
