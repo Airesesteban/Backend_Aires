@@ -68,7 +68,31 @@ class   ProductManager {
         }
     }
 
-    updateProduct = async (idProduct)
+    updateProduct = async (idProduct,nombre) =>{
+        const products = await this.getProducts();
+        let indice = products.findIndex(producto => producto.id == idProduct)
+        if(indice != -1){
+            products[indice].title = nombre;
+        }else{
+            return ['Not found'];
+        }
+        await fs.promises.writeFile(path,JSON.stringify(products,null,'\t'))
+        return products;
+    }
+
+    deleteProduct = async (idProduct) =>{
+        const products = await this.getProducts();
+
+        let product = products.find(producto => producto.id == idProduct)
+        if(product){
+            products.splice((idProduct-1), 1);
+            
+        }else{
+            return ['Not found'];
+        }
+        await fs.promises.writeFile(path,JSON.stringify(products,null,'\t'))
+        return products;
+    }
 }
 
 //Ejemplos para hacer las pruebas
@@ -86,27 +110,27 @@ console.log(productManager.getProducts()); */
 console.log(productManager.getProductById(2));
 console.log(productManager.getProductById(3));  */// Retorna "Not Found"
 
-/*  const manager = new ProductManager();
+ // const manager = new ProductManager();
 
-const env = async () => {
-
-    let primerConsulta = await manager.getProducts();
-    console.log(primerConsulta);
+/* const env = async () => {
+ 
+     let primerConsulta = await manager.getProducts();
+    console.log(primerConsulta);  
     let product = {
         title: 'Smartphone',
-        description: 'Motorla g50',
+        description: 'Motorola g50',
         price: 3520,
         thumbnail: 'motog50.png',
         code:'Mg50',
         stock: 18
     }
-    let result = await manager.addProduct(product);
+    let result = await manager.updateProduct(1,product);
     console.log(result);
-}
+} 
 
 env() */
 
 const manager = new ProductManager();
 
-let result = await manager.getProductById(5);
+let result = await manager.updateProduct(1,precio,1);
 console.log(result); 

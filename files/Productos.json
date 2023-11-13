@@ -1,5 +1,13 @@
 [
 	{
+		"0": {
+			"title": "Smartphone",
+			"description": "Motorola g50",
+			"price": 3520,
+			"thumbnail": "motog50.png",
+			"code": "Mg50",
+			"stock": 18
+		},
 		"title": "Mouse",
 		"description": "Mouse Logitech",
 		"price": 3520,
@@ -16,5 +24,14 @@
 		"code": "Mg50",
 		"stock": 18,
 		"id": 2
+	},
+	{
+		"title": "Smartphone",
+		"description": "Motorola g50",
+		"price": 3520,
+		"thumbnail": "motog50.png",
+		"code": "Mg50",
+		"stock": 18,
+		"id": 3
 	}
 ]
