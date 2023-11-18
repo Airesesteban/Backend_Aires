@@ -1,0 +1,93 @@
+[
+	{
+		"title": "Radio",
+		"description": "fm",
+		"price": 1000,
+		"thumbnail": "radiofm.png",
+		"code": "RFM",
+		"stock": 36,
+		"id": 1
+	},
+	{
+		"title": "Smartphone s23",
+		"description": "Celular inteligente",
+		"price": 10000,
+		"thumbnail": "Smartphone s23.png",
+		"code": "SS23",
+		"stock": 35,
+		"id": 2
+	},
+	{
+		"title": "Smartphone s24",
+		"description": "Celular inteligente",
+		"price": 10500,
+		"thumbnail": "Smartphone s24.png",
+		"code": "SS24",
+		"stock": 2,
+		"id": 3
+	},
+	{
+		"title": "Smartphone s20",
+		"description": "Celular inteligente",
+		"price": 5000,
+		"thumbnail": "Smartphone s20",
+		"code": "SS20",
+		"stock": 100,
+		"id": 4
+	},
+	{
+		"title": "Notebook Acer 1",
+		"description": "Notebook Acer 1",
+		"price": 8000,
+		"thumbnail": "Notebookacer1.png",
+		"code": "NA1",
+		"stock": 36,
+		"id": 5
+	},
+	{
+		"title": "Notebook Acer 2",
+		"description": "Notebook Acer 2",
+		"price": 10000,
+		"thumbnail": "Notebooacer2k.png",
+		"code": "NA2",
+		"stock": 36,
+		"id": 6
+	},
+	{
+		"title": "Notebook Dell 1",
+		"description": "Notebook Dell 1",
+		"price": 12000,
+		"thumbnail": "Notebookdell1.png",
+		"code": "ND1",
+		"stock": 36,
+		"id": 7
+	},
+	{
+		"title": "Notebook Dell 2",
+		"description": "Notebook Dell 2",
+		"price": 14000,
+		"thumbnail": "Notebookdell2.png",
+		"code": "ND2",
+		"stock": 36,
+		"id": 8
+	},
+	{
+		"title": "Notebook HP",
+		"description": "Notebook HP",
+		"price": 9000,
+		"thumbnail": "NotebookHP.png",
+		"code": "NHP",
+		"stock": 36,
+		"id": 9
+	},
+	{
+		"title": "tv samsung 40",
+		"description": "tv samsung 40 pulgadas",
+		"price": 20000,
+		"thumbnail": "tvsamsung40.png",
+		"code": "TV40",
+		"stock": 36,
+		"id": 10
+	}
+	
+]

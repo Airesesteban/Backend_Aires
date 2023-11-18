@@ -9,42 +9,48 @@ export default class ProductManager {
 
 
     getProducts = async () => {
-        if(fs.existsSync(this.path)){
-            const data = await fs.promises.readFile(this.path, 'utf8');
-            const products = JSON.parse(data);
-            return products
-        }else{
-            return [];
-        }
+
+         try{ 
+            if(fs.existsSync(this.path)){
+                const data = await fs.promises.readFile(this.path, 'utf8');
+                const products = JSON.parse(data);
+                return products
+            }else{
+                return [];
+            }
+         }
+        catch(err){
+            return err;
+        }   
     }
    
     addProduct = async (producto) => {
-    try{ 
-
-        if (!producto.title || !producto.description || !producto.price || !producto.thumbnail || !producto.code || !producto.stock) {
-            return('All fields are required');
-          }
-          
-        const products = await this.getProducts();
-        
-        if (products.find(product => product.code === producto.code)) {
-            return('Product with this code already exists');
+        try{ 
+    
+            if (!producto.title || !producto.description || !producto.price || !producto.thumbnail || !producto.code || !producto.stock) {
+                return('All fields are required');
+              }
+              
+            const products = await this.getProducts();
             
-          }
-
-        if (products.length === 0){
-            producto.id = 1
-        }else{
-            producto.id = products[products.length-1].id+1;
+            if (products.find(product => product.code === producto.code)) {
+                return('Product with this code already exists');
+                
+              }
+    
+            if (products.length === 0){
+                producto.id = 1
+            }else{
+                producto.id = products[products.length-1].id+1;
+            }
+            products.push(producto);
+            await fs.promises.writeFile(this.path,JSON.stringify(products,null,'\t'))
+            return products;
+            }
+            catch(err) {
+                return err;
+            }
         }
-        products.push(producto);
-        await fs.promises.writeFile(this.path,JSON.stringify(products,null,'\t'))
-        return products;
-        }
-        catch(err) {
-            return err;
-        }
-    }
     
     getProductById = async (idProduct) =>{
         const products = await this.getProducts();
