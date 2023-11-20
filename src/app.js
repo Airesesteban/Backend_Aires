@@ -14,13 +14,15 @@ app.listen(PORT, ()=>{
 
 const manager = new ProductManager('./files/Productos.json');
 
+
+
 app.get('/products',async (req,res)=>{
 
   try {
     const products = await manager.getProducts();
-    const limit = parseint(req.query.limit);
+    const limit = parseInt(req.query.limit);
 
-    if(isNaN(limit) && limit < 0){
+    if(isNaN(limit) || limit < 0){
       return res.json({products: products});
     }
     const productslimited = products.slice(0, limit);
@@ -36,7 +38,7 @@ app.get('/products/:pid', async(req,res)=>{
 
   try{
     const products = await manager.getProducts();
-    const productId = parseint(req.params.pid);
+    const productId = parseInt(req.params.pid);
 
     if(!isNaN(productId)){
       const product = products.find(product => product.id === productId);
