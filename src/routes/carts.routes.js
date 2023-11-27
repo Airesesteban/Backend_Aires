@@ -5,56 +5,60 @@ const path = "Cart.json"
 const router = Router();
 const cartManager = new CartManager(path);
 
-router.get('/', async (req, res) => {
-    const carts = await cartManager.getCarts();
-
-    res.send({
-        status:"succes",
-        carritos: carts
-    })
-})
-
 router.get('/:cid', async (req, res) => {
-    const cid = req.params.cid;
+    const cartId = parseInt(req.params.cid);
+    const carts = await cartManager.getCartById(cartId);
 
-    res.send({
-        status:"succes",
-        msg:`Ruta GET ID CART con ID: ${cid}`
-    })
+    if(!isNaN(cartId)){
+        const cart = carts.find(cart => cart.id === cartId);
+        if (cart){
+            res.send({
+                status:"succes",
+                msg:`Cart con ID: ${cid}`
+            })
+        }else{
+          res.send({
+              status:"error",
+              error: "Carrito no encontrado"
+          })
+        }
+    }
 })
 
 router.post('/', async (req, res) => {
-    res.send({
-        status:"succes",
-        msg:"Ruta POST CART"
-    })
-    
+    const cartData = req.body;
+    const newCart = await cartManager.addCart(CartData);
+
+    if (newCart){
+        res.send({
+            status:"succes",
+            msg:"Nuevo carrito agregado"
+        })
+    }else{
+        res.send({
+            status:"error",
+            msg:"Error al agregar o carrito inexistente"
+        })
+    }
 })
 
 router.post('/:cid/product/:pid', async (req,res)=>{
-    const cid = req.params.cid;
-    const pid = req.params.pid;
+    const cartId = req.params.cid;
+    const productId = req.params.pid;
 
+    const newProduct = await cartManager.addProductToCart(cartId, productId);
+
+    if(newProduct){
     res.send({
         status:"succes",
-        msg:`Ruta POST CART - Agrego producto al carrito. CID: ${cid} - PID: ${pid}`
+        msg:`Se agrego producto ${pid} al carrito ${cid}`
     })
-})
-
-router.put('/:cid', async (req,res)=>{
-    const cid = req.params.cid;
-    res.send({
-        status:"succes",
-        msg:`Ruta PUT de CART con ID: ${cid}`
-    })
-})
-
-router.delete('/', async (req, res) => {
-    const cid = req.params.cid;
-    res.send({
-        status:"succes",
-        msg:`Ruta DELETE de CART con ID: ${cid}`
-    })
+    }else{
+        res.send({
+            status:"error",
+            msg:"Error al agregar el producto al carrito"
+        })
+    }
 })
 
 export {router as cartRouter}
