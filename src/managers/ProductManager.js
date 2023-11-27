@@ -1,10 +1,12 @@
 import fs from 'fs';
+import path from "path";
+import __dirname from "../utils.js";
 
-export default class ProductManager {
+class ProductManager {
 
-    constructor( path ){
+    constructor( pathFile ){
 
-        this.path = path;
+        this.path = path.join(__dirname,`/files/${pathFile}`);
     }
 
 
@@ -63,13 +65,19 @@ export default class ProductManager {
         }
     }
 
-    updateProduct = async (idProduct,nombre) =>{
+    updateProduct = async (idProduct,product) =>{
 
         try{
         const products = await this.getProducts();
         let indice = products.findIndex(producto => producto.id == idProduct)
         if(indice != -1){
-            products[indice].title = nombre;
+            products[indice].title = product.title;
+            products[indice].description = product.description
+            products[indice].price = product.price
+            products[indice].thumbnail = product.thumbnail
+            products[indice].code = product.code
+            products[indice].stock = product.stock
+            products[indice].category = product.category
         }else{
             return ['Not found'];
         }
@@ -101,3 +109,5 @@ export default class ProductManager {
     }       
 
 }
+
+export {ProductManager};
