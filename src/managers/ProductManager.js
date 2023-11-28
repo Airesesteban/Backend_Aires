@@ -29,10 +29,6 @@ class ProductManager {
     addProduct = async (producto) => {
         try{ 
     
-            if (!producto.title || !producto.description || !producto.price || !producto.thumbnail || !producto.code || !producto.stock) {
-                return('All fields are required');
-              }
-              
             const products = await this.getProducts();
             
             if (products.find(product => product.code === producto.code)) {
@@ -58,11 +54,11 @@ class ProductManager {
         const products = await this.getProducts();
 
         let product = products.find(producto => producto.id == idProduct)
-        if(product){
+        /* if(product){ */
             return product;
-        }else{
+      /*   }else{
             return ['Not found'];
-        }
+        } */
     }
 
     updateProduct = async (idProduct,product) =>{

@@ -6,40 +6,34 @@ const router = Router();
 const productManager = new ProductManager(path);
 
 router.get('/', async (req, res) => {
-    try {
-        const products = await manager.getProducts();
-        const limit = parseInt(req.query.limit);
+
+    const products = await productManager.getProducts();
+    const limit = parseInt(req.query.limit);
     
-        if(isNaN(limit) || limit < 0){
-          return res.send({
-            status:"succes",
-            productos: products
-        })
-        }
-        const productslimited = products.slice(0, limit);
+    if(isNaN(limit) || limit < 0){
+        return res.send({
+         status:"succes",
+        productos: products
+    })
+    }
+        
+    const productslimited = products.slice(0, limit);
     
-        res.send({
-            status:"succes",
-            productos: productslimited
-        })
-    
-      }catch(err){
-        return err;
-      }
+    res.send({
+        status:"succes",
+        productos: productslimited
+    })
 })
 
 router.get('/:pid', async (req, res) => {
 
-    try{
-        const products = await manager.getProducts();
-        const productId = parseInt(req.params.pid);
-    
-        if(!isNaN(productId)){
-          const product = products.find(product => product.id === productId);
-          if (product){
+        const productId = req.params
+        const products = await productManager.getProductById(parseInt(productId));
+
+          if (products){
             res.send({
                 status:"succes",
-                producto: product
+                producto: products
             })
           }else{
             res.send({
@@ -47,20 +41,14 @@ router.get('/:pid', async (req, res) => {
                 error: "Producto no encontrado"
             })
           }
-        }
-        else{
-            res.send({
-                status:"error",
-                error: "ID Inválido"
-            })
-        }
-      }catch(err){
-        return err;
-      }
 })
 
 router.post('/', async (req, res) => {
     const product = req.body;
+
+    if (!product.title || !product.description || !product.code || !product.price || !product.stock || !product.category) {
+        return res.status(400).send('All fields are required');
+    }
     const products = await productManager.addProduct(product);
 
     res.send({
@@ -88,7 +76,7 @@ router.put('/:pid', async (req, res) => {
         }
 })
 
-router.delete('/', async (req, res) => {
+router.delete('/:pid', async (req, res) => {
     const pid = req.params.pid;
     const productConfirm = await productManager.deleteProduct(pid)
 

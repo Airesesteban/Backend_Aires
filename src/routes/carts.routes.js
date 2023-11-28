@@ -14,7 +14,7 @@ router.get('/:cid', async (req, res) => {
         if (cart){
             res.send({
                 status:"succes",
-                msg:`Cart con ID: ${cid}`
+                carro: cart
             })
         }else{
           res.send({
