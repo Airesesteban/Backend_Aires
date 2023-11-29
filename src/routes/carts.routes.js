@@ -27,7 +27,7 @@ router.get('/:cid', async (req, res) => {
 
 router.post('/', async (req, res) => {
     const cartData = req.body;
-    const newCart = await cartManager.addCart(CartData);
+    const newCart = await cartManager.addCart(cartData);
 
     if (newCart){
         res.send({
