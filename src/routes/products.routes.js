@@ -57,7 +57,7 @@ router.put('/:pid', async (req, res) => {
     
     res.send({
         status:"succes",
-        msg:`Producto con ID: ${pid} actualizado correctamente`
+        msg: pActualizado
     })
 })
 

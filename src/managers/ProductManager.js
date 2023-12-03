@@ -15,7 +15,7 @@ class ProductManager {
          try{ 
             if(fs.existsSync(this.path)){
                 const productos = JSON.parse(await fs.promises.readFile( this.path, 'utf-8'))
-                return products
+                return productos
             }else{
                 return ('Not found');
             }

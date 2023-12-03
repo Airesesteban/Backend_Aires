@@ -46,11 +46,11 @@ router.post('/:cid/product/:pid', async (req,res)=>{
     const cartId = req.params.cid;
     const productId = req.params.pid;
 
-    const newProduct = await cartManager.addProductToCart(cartId, productId);
+    const result = await cartManager.addProductToCart(cartId, productId);
 
     res.send({
         status:"succes",
-        msg:`Se agrego producto ${pid} al carrito ${cid}`
+        msg: result
     })
 })
 

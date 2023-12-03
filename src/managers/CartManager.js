@@ -62,23 +62,26 @@ class CartManager {
     addProductToCart = async (idCart,idProduct) =>{
 
         try{
-        const carts = await this.getCarts();
-        let cartIndex = carts.findIndex(cart => cart.id == idCart)
-        
-        if(cartIndex === -1){
-            return ['Not found'];
-        }
+            const carts = await this.getCarts();
 
-        const productIndex = carts[cartIndex].products.findIndex(product => product.id === idProduct);
+            let cart = carts.find(cart => cart.id == idCart)
+    
+            if(!cart){
+    
+                return "Cart Not Found.";
+            }
+    
 
-        if(productIndex === -1){
-            carts[cartIndex].products.push({id: idProduct, quantity});
-        }else{
-            carts[cartIndex].products[productIndex].quantity += 1 ;
-        }
-
-        await fs.promises.writeFile(this.path,JSON.stringify(carts,null,'\t'))
-        return carts;
+            const productIndex = cart.products.findIndex(p => p.product === idProduct);
+            if (productIndex !== -1) {
+                cart.products[productIndex].quantity += 1;
+            } else {
+                cart.products.push({ product: productId, quantity: 1 });
+            }
+    
+            await fs.promises.writeFile( this.path, JSON.stringify(carts, null, '\t') )
+    
+            return carts;
         }
         catch(err) {
             return err;

@@ -1,11 +1,5 @@
 [
 	{
-		"title": "Radio",
-		"description": "fm",
-		"price": 1000,
-		"thumbnail": "radiofm.png",
-		"code": "RFM",
-		"stock": 36,
 		"id": 1
 	},
 	{
