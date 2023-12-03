@@ -7,7 +7,7 @@ const cartManager = new CartManager(path);
 
 router.get('/:cid', async (req, res) => {
     const cartId = parseInt(req.params.cid);
-    const carts = await cartManager.getCartById(cartId);
+    let carts = await cartManager.getCartById(cartId);
 
     if(!isNaN(cartId)){
         const cart = carts.find(cart => cart.id === cartId);
@@ -48,17 +48,10 @@ router.post('/:cid/product/:pid', async (req,res)=>{
 
     const newProduct = await cartManager.addProductToCart(cartId, productId);
 
-    if(newProduct){
     res.send({
         status:"succes",
         msg:`Se agrego producto ${pid} al carrito ${cid}`
     })
-    }else{
-        res.send({
-            status:"error",
-            msg:"Error al agregar el producto al carrito"
-        })
-    }
 })
 
 export {router as cartRouter}

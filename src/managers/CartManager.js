@@ -11,8 +11,7 @@ class CartManager {
 
         try{ 
            if(fs.existsSync(this.path)){
-               const data = await fs.promises.readFile(this.path, 'utf8');
-               const carts = JSON.parse(data);
+            const carts = JSON.parse(await fs.promises.readFile( this.path, 'utf-8'))
                return carts;
            }else{
                return ('Not found');
@@ -26,7 +25,7 @@ class CartManager {
    getCartById = async (idCart) =>{
     const carts = await this.getCarts();
 
-    let cart = carts.find(carro => carro.id == idCart)
+    let cart = carts.find(cart => cart.id == idCart)
     if(cart){
         return cart;
     }else{
@@ -37,18 +36,22 @@ class CartManager {
    addCart = async () => {
     try{
         const carts = await this.getCarts();
-        const newCart = {
-            id,
-            products: cartData.products || []
-        };  
-
-        if (carts.length === 0){
-            cart.id = 1
+        
+        if( carts.length === 0)
+        {
+            let cart = {
+                id: 1,
+                products: []
+            }
+            carts.push( cart );
         }else{
-            cart.id = carts[carts.length-1].id+1;
+            let cart = {
+                id: carts[ carts.length-1 ].id + 1,
+                products: []
+            }
+            carts.push( cart );
         }
-        carts.push(cart);
-        await fs.promises.writeFile(this.path,JSON.stringify(carts,null,'\t'))
+        await fs.promises.writeFile( this.path, JSON.stringify(carts, null, '\t') )
         return carts;
         }
         catch(err) {
