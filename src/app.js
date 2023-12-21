@@ -6,6 +6,12 @@ import viewRouter from "./routes/views.routes.js";
 import __dirname from "./utils.js";
 import {Server} from "socket.io";
 import ProductManager from './managers/ProductManager.js';
+import mongoose from "mongoose";
+import messageModel from ".dao/models/message.model.js";
+
+import {dbProductsRouter} from "../routes/dbProductsRoutes.js";
+import { dbCartsRouter } from './routes/dbCarts.routes.js';
+import {dbMessageRouter} from "../routes/dbMessages.routes.js";
 
 
 const PORT = 8080;
@@ -20,6 +26,8 @@ const productManager = new ProductManager('src/files/Productos.json');
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 
+const MONGO = "mongodb+srv: airesesteban:Blancaoscar1@backend-aires.xckuzk8.mongodb.net/";
+const connection = mongoose.connect(MONGO);
 
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
@@ -31,15 +39,28 @@ app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
 app.use("/", viewRouter);
 
-socketServer.on("connection",async(socket)=>{
-    console.log("client connected con ID:",socket.id)
-    const listadeproductos=await productManager.getProducts()
+app.use("/api/dbProducts", dbProductsRouter);
+app.use("/api/dbCarts", dbCartsRouter);
+app.use("/api/dbMessages", dbMessagesRouter);
 
-    socketServer.emit("enviodeproducts",listadeproductos)
-
-    socket.on("addProduct",async(obj)=>{
-        await productManager.addProduct(obj)
-        const listadeproductos=await productManager.getProducts()
-        socketServer.emit("enviodeproducts",listadeproductos)
-        })
-})
+io.on('connection', async (socket) => {
+    try {
+      console.log('Nuevo cliente conectado');
+      
+      socket.on('sendMessage', async (data) => {
+        
+        try {
+          const newMessage = await messageModel.create({ user: data.user, message: data.message });
+          console.log('Nuevo mensaje guardado', newMessage);
+  
+          io.emit('newMessage', { user: data.user, message: data.message });
+        } catch (error) {
+          console.error('Error al guardar el mensaje en la base de datos:', error.message);
+        }
+      });
+  
+  
+    } catch (error) {
+      console.error('Error en la conexión de socket:', error.message);
+    }
+  });
