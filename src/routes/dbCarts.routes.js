@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { dbCartManager } from "../dao/managers/dbCartmanager";
+import { dbCartManager } from "../dao/managers/dbCartManager";
 
 const router = Router();
 const cartManager = new dbCartManager();
