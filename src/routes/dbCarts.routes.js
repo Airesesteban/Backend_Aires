@@ -1,19 +1,29 @@
 import { Router } from "express";
 import { dbCartManager } from "../dao/managers/dbCartManager";
+import cartModel from "../dao/models/carts.models.js";
 
 const router = Router();
 const cartManager = new dbCartManager();
 
 router.get('/:cid', async (req, res) => {
 
-    const cid = req.params;
+    const cid = req.params.cid;
 
-    const carts = await cartManager.getCartById(cid);
+    const cart = await cartModel
+      .findOne({ id: cid })
+      .populate('products.product');
 
-    res.send({
-        status: "success",
-        message: carts
-    })
+    if (cart) {
+        res.send({
+            status: "success",
+            message: cart
+        })
+    } else {
+        res.send({
+            status: "error",
+            message: "Carrito no encontrado"
+        })
+    }
 })
 
  router.post('/', async (req, res) => {
@@ -38,12 +48,80 @@ router.post('/:cid/product/:pid', async (req,res)=>{
     const pid = req.params.pid;
     const quantity = req.body.quantity;
 
-    const result = await cartManager.addProductToCart(cartId, productId,quantity);
+    const result = await cartManager.addProductToCart(cid, pid,quantity);
 
     res.send({
         status:"succes",
         msg: result
     })
 })
+
+router.delete('/:cid/product/:pid', async (req,res)=>{
+    const {cid,pid}=req.params
+
+    try {
+        const result = await cartManager.deleteProductCart(cid,pid)
+            res.send({
+                status:"succes",
+                msg: result
+            })
+      } catch (error) {
+        console.error("Error al eliminar", error);
+    }
+})
+
+router.delete("/:cid", async (req, res) => {
+    const { cid } = req.params;
+  
+    try {
+      const cart = await cartManager.deleteAllProductsFromCart({ id: cid });
+  
+      if (cart) {
+        res.send({
+            status:"succes",
+            msg: cart
+        })
+      } else {
+        res.send({
+            status:"error",
+            msg: cart
+        })
+      }
+    } catch (error) {
+        console.error("Error al eliminar", error);
+    }
+  });
+
+router.put('/:cid/product/:pid', async (req,res)=>{
+    const { cid, pid } = req.params;
+    const { quantity } = req.body;
+
+    try {
+        const result = await cartManager.updateProductQuantity(cid, pid, quantity);
+
+        res.send({
+            status:"succes",
+            msg: result
+        })
+    } catch (error) {
+        console.error("Error", error);
+  }
+})
+
+router.put('/:cid', async (req,res)=>{
+    const { cid } = req.params;
+    const updatedProducts = req.body;
+
+  try {
+    const result = await cartManager.updateCart(cid, updatedProducts);
+    res.send({
+        status:"succes",
+        msg: result
+    })
+  } catch (error) {
+    console.error("Error al agregar", error);
+  }
+})
+
 
 export {router as dbCartsRouter}

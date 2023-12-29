@@ -19,9 +19,6 @@ const app = express();
 
 const httpServer = app.listen(PORT, () => console.log(`Servidor funcionando en el puerto: ${PORT}`));
 
-const socketServer = new Server(httpServer);
-
-const productManager = new ProductManager('src/files/Productos.json');
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
@@ -41,7 +38,11 @@ app.use("/", viewRouter);
 
 app.use("/api/dbProducts", dbProductsRouter);
 app.use("/api/dbCarts", dbCartsRouter);
-app.use("/api/dbMessages", dbMessagesRouter);
+app.use("/api/dbMessages", dbMessageRouter);
+
+const io = new Server(httpServer);
+const productManager = new ProductManager(io);
+
 
 io.on('connection', async (socket) => {
     try {
@@ -64,3 +65,5 @@ io.on('connection', async (socket) => {
       console.error('Error en la conexión de socket:', error.message);
     }
   });
+
+export default app;

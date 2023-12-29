@@ -2,13 +2,28 @@ import productsModel from "../dao/models/products.model.js";
 
 class dbProductManager{
 
-    async getProducts(){
-        try{
-            const products = await productsModel.find();
-            return products;
+    async getProducts(query, { limit, page, sort: sortOption }){
+        try {
+            
+            if (isNaN(limit) || parseInt(limit) <= 0) {
+              return "Error: 'limit' debe ser un número positivo.";
+            }
+
+          
+            if (isNaN(page) || parseInt(page) <= 0) {
+              return "Error: 'page' debe ser un número positivo.";
+            }
+
+            
+            if (sortOption !== 'price' && sortOption !== '-price' && sortOption !== null) {
+              return "Error: 'sort' debe ser 'asc', 'desc' o null.";
+            }
+              
+          const products = await productsModel.paginate(query, { limit, page, sort: sortOption });
+          return products
 
         }catch(error){
-            console.error('Error al consultar productos desde Mongo');
+            console.error('Error al consultar productos desde Mongo',error);
         }
     }
 
@@ -20,7 +35,7 @@ class dbProductManager{
             return result;
 
         }catch(error){
-            console.error('Error al agregar el producto');
+            console.error('Error al agregar el producto',error);
         }
     }
 
@@ -30,7 +45,7 @@ class dbProductManager{
             return product;
 
         }catch(error){
-            console.error('Error al obtener producto por el ID');
+            console.error('Error al obtener producto por el ID',error);
         }
     }
 
@@ -38,7 +53,7 @@ class dbProductManager{
         try{
             const result = await productsModel.updateOne({id:id}, {$set:updateProduct});
         }catch(error){
-            console.error('Error al actualizar el producto')
+            console.error('Error al actualizar el producto',error)
         }
     }
 
@@ -47,7 +62,7 @@ class dbProductManager{
             const result = await productsModel.deleteOne({id:id})
 
         }catch(error){
-            console.error('Error al eliminar el producto')
+            console.error('Error al eliminar el producto',error)
         }
     }
 }
