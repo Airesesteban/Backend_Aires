@@ -1,5 +1,4 @@
 import { Router } from "express";
-import productsModel from "../dao/models/products.model.js";
 import {dbProductManager} from "../dao/managers/dbProductManager.js";
 
 const router = Router();
@@ -101,4 +100,4 @@ router.delete("/:pid", async (req, res)=>{
  
 })
 
-export { router as dbProductsRouters };
+export { router as dbProductsRouter };

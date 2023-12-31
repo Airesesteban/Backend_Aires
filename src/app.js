@@ -5,13 +5,13 @@ import {engine} from "express-handlebars";
 import viewRouter from "./routes/views.routes.js";
 import __dirname from "./utils.js";
 import {Server} from "socket.io";
-import ProductManager from './managers/ProductManager.js';
+import ProductManager from './dao/managers/ProductManager.js';
 import mongoose from "mongoose";
-import messageModel from ".dao/models/message.model.js";
+import messageModel from "./dao/models/message.model.js";
 
-import {dbProductsRouter} from "../routes/dbProductsRoutes.js";
+import {dbProductsRouter} from "./routes/dbProducts.routes.js";
 import { dbCartsRouter } from './routes/dbCarts.routes.js';
-import {dbMessageRouter} from "../routes/dbMessages.routes.js";
+import {dbMessageRouter} from "./routes/dbMessages.routes.js";
 
 
 const PORT = 8080;
