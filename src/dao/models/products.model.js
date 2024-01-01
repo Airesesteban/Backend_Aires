@@ -3,7 +3,7 @@ import mongoosePaginate from "mongoose-paginate-v2";
 
 const collection = "products";
 
-const productsSchema = new moongose.Schema({
+const productsSchema = new mongoose.Schema({
     title:{
         type: String,
         required: true,
@@ -43,7 +43,7 @@ const productsSchema = new moongose.Schema({
 
 })
 
-producSchema.plugin(mongoosePaginate);
+productsSchema.plugin(mongoosePaginate);
 
 const productsModel = mongoose.model(collection,productsSchema);
 

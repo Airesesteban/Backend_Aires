@@ -1,6 +1,6 @@
 import {Router} from  "express";
-import { dbProductManager } from "../dao/managers/dbProductManager";
-import {dbCartManager} from "../dao/managers/dbCartManager";    
+import { dbProductManager } from "../dao/managers/dbProductManager.js";
+import {dbCartManager} from "../dao/managers/dbCartManager.js";    
 
 const router = Router();
 const productManager = new dbProductManager();
@@ -8,7 +8,7 @@ const cartManager = new dbCartManager();
 
 router.get("/", async(req, res) => {
     try{
-        const listadeproductos = await productManager.getProducts();
+        const listadeproductos = await productManager.getProducts({}, { limit: 10, page: 1, sort: 'asc' });
         res.render("home",{listadeproductos})
     }catch(error){
         console.error('Error al obtener la lista de productos:', error);
@@ -18,7 +18,7 @@ router.get("/", async(req, res) => {
 
 router.get('/dbproducts', async (req, res) => {
     try {
-      const { limit = 5, page = 1, order, category } = req.query;
+      const { limit = 5, page = 1, sort, category } = req.query;
         
       const sortOption = sort === 'desc' ? '-price' : 'price'
 
@@ -28,7 +28,7 @@ router.get('/dbproducts', async (req, res) => {
         sort: sortOption,
       };
   
-      const result = await productManager.getProducts(({}, options, category));
+      const result = await productManager.getProducts({}, options, category);
   
       const response = {
         status: 'success',

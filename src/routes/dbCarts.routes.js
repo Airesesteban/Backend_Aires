@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { dbCartManager } from "../managers/dbCartManager";
-import cartModel from "../models/carts.models.js";
+import { dbCartManager } from "../dao/managers/dbCartManager.js";
+import cartsModel from "../dao/models/carts.model.js";
+
 
 const router = Router();
 const cartManager = new dbCartManager();
@@ -9,7 +10,7 @@ router.get('/:cid', async (req, res) => {
 
     const cid = req.params.cid;
 
-    const cart = await cartModel
+    const cart = await cartsModel
       .findOne({ id: cid })
       .populate('products.product');
 

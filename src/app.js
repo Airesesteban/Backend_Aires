@@ -5,7 +5,7 @@ import {engine} from "express-handlebars";
 import viewRouter from "./routes/views.routes.js";
 import __dirname from "./utils.js";
 import {Server} from "socket.io";
-import ProductManager from './dao/managers/ProductManager.js';
+import {ProductManager} from './dao/managers/ProductManager.js';
 import mongoose from "mongoose";
 import messageModel from "./dao/models/message.model.js";
 
@@ -23,7 +23,7 @@ const httpServer = app.listen(PORT, () => console.log(`Servidor funcionando en e
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 
-const MONGO = "mongodb+srv: airesesteban:Blancaoscar1@backend-aires.xckuzk8.mongodb.net/";
+const MONGO = "mongodb+srv://airesesteban:Blancaoscar1@backend-aires.xckuzk8.mongodb.net/ecomerce";
 const connection = mongoose.connect(MONGO);
 
 app.engine("handlebars", engine());
