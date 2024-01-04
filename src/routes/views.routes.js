@@ -18,7 +18,7 @@ router.get("/", async(req, res) => {
 
 router.get('/dbproducts', async (req, res) => {
     try {
-      const { limit = 5, page = 1, sort, category } = req.query;
+      const { limit = 5, page = 1,query, sort, category } = req.query;
         
       const sortOption = sort === 'desc' ? '-price' : 'price'
 
@@ -29,7 +29,7 @@ router.get('/dbproducts', async (req, res) => {
         lean:true,
       };
   
-      const result = await productManager.getProducts(options, null, category);
+      const result = await productManager.getProducts(options,limit, query, category);
   
       const response = {
         status: 'success',
