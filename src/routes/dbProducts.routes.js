@@ -6,31 +6,32 @@ const productManager = new dbProductManager();
 
 router.get("/", async (req, res)=>{
     try{
-        const { limit = 10, page = 1, sort, category, status } = req.query
-        const sortOption = sort === 'asc' ? 'price' : sort === 'desc' ? '-price' : null;
-        const query = {};
-        if (category) query.category = category;
-        if (status) query.status = status;
-    
-        const result= await productManager.getProducts(query, { limit, page, sort: sortOption })
+        const { limit = 10, page = 1, query, sort, category } = req.query;
 
-        const response = {
-            status: "success",
-            payload: result.docs,
-            totalPages: result.totalPages,
-            prevPage: result.prevPage,
-            nextPage: result.nextPage,
-            page: result.page,
-            hasPrevPage: result.hasPrevPage,
-            hasNextPage: result.hasNextPage,
-            prevLink: result.hasPrevPage ? `/api/dbproducts?limit=${limit}&page=${result.prevPage}&sort=${sort}&category=${category}` : null,
-            nextLink: result.hasNextPage ? `/api/dbproducts?limit=${limit}&page=${result.nextPage}&sort=${sort}&category=${category}` : null,
-        };
-    
-        res.send({
-            status: "success",
-            message: response
-        })
+
+    const options = {
+      limit: parseInt(limit, 10),
+      page: parseInt(page, 10),
+      sort: getOrderSort(sort),
+      lean: true,
+    };
+
+    const result = await productManager.getProducts(options, query, category);
+
+    const response = {
+      status: "success",
+      payload: result.docs,
+      totalPages: result.totalPages,
+      prevPage: result.prevPage,
+      nextPage: result.nextPage,
+      page: result.page,
+      hasPrevPage: result.hasPrevPage,
+      hasNextPage: result.hasNextPage,
+      prevLink: result.hasPrevPage ? `/api/dbproducts?limit=${limit}&page=${result.prevPage}&sort=${sort}&category=${category}` : null,
+      nextLink: result.hasNextPage ? `/api/dbproducts?limit=${limit}&page=${result.nextPage}&sort=${sort}&category=${category}` : null,
+    };
+
+    res.json(response);
     }catch(error) {
         console.error("Error al obtener productos",error)
     }

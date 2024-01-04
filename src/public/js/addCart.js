@@ -7,7 +7,7 @@ function obtenerCartId() {
   function addToCart(pid) {
     const cid = obtenerCartId();
   
-    if (!cidd) {
+    if (!cid) {
       console.error('Error: cid no válido');
       return;
     }

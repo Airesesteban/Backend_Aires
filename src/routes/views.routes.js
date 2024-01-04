@@ -26,9 +26,10 @@ router.get('/dbproducts', async (req, res) => {
         limit: parseInt(limit, 10),
         page: parseInt(page, 10),
         sort: sortOption,
+        lean:true,
       };
   
-      const result = await productManager.getProducts({}, options, category);
+      const result = await productManager.getProducts(options, null, category);
   
       const response = {
         status: 'success',
@@ -42,7 +43,7 @@ router.get('/dbproducts', async (req, res) => {
         prevLink: result.hasPrevPage ? `/dbproducts?limit=${limit}&page=${result.prevPage}` : null,
         nextLink: result.hasNextPage ? `/dbproducts?limit=${limit}&page=${result.nextPage}` : null,
       };
-      res.render('products', { products: response });
+      res.render('dbproducts', { products: response });
     } catch (error) {
       console.error('Error al obtener la lista de productos:', error);
     }

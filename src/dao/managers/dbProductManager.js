@@ -24,6 +24,7 @@ class dbProductManager{
 
         }catch(error){
             console.error('Error al consultar productos desde Mongo',error);
+            return { error: 'Error interno del servidor.' };
         }
     }
 
