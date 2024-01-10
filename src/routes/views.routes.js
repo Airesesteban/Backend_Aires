@@ -40,8 +40,8 @@ router.get('/products', async (req, res) => {
         page: result.page,
         hasPrevPage: result.hasPrevPage,
         hasNextPage: result.hasNextPage,
-        prevLink: result.hasPrevPage ? `/dbproducts?limit=${limit}&page=${result.prevPage}` : null,
-        nextLink: result.hasNextPage ? `/dbproducts?limit=${limit}&page=${result.nextPage}` : null,
+        prevLink: result.hasPrevPage ? `/products?limit=${limit}&page=${result.prevPage}` : null,
+        nextLink: result.hasNextPage ? `/products?limit=${limit}&page=${result.nextPage}` : null,
       };
       res.render('products', { products: response, user: req.session.user });
     } catch (error) {
