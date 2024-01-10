@@ -16,7 +16,7 @@ router.get("/", async(req, res) => {
     
 })
 
-router.get('/dbproducts', async (req, res) => {
+router.get('/products', async (req, res) => {
     try {
       const { limit = 5, page = 1,query, sort, category } = req.query;
         
@@ -43,7 +43,7 @@ router.get('/dbproducts', async (req, res) => {
         prevLink: result.hasPrevPage ? `/dbproducts?limit=${limit}&page=${result.prevPage}` : null,
         nextLink: result.hasNextPage ? `/dbproducts?limit=${limit}&page=${result.nextPage}` : null,
       };
-      res.render('dbproducts', { products: response, user: req.session.user });
+      res.render('products', { products: response, user: req.session.user });
     } catch (error) {
       console.error('Error al obtener la lista de productos:', error);
     }
