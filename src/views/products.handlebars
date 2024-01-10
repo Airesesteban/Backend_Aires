@@ -6,7 +6,16 @@
   <title>Lista de Productos</title>
 </head>
 <body>
-<h1>Lista de Productos</h1>
+
+<div>
+    <h1>Bienvenido!</h1>
+    <p>{{user.full_name}}</p>
+    <p>{{user.email}}</p>
+    <p>{{user.age}}</p>
+    <p>{{user.rol}}</p>
+    <a href="/api/sessions/logout"><button>Logout</button></a>
+</div>
+<h2>Lista de Productos</h2>
 
 {{#each products.payload}}
   <div>

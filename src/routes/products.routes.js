@@ -1,74 +1,104 @@
 import { Router } from "express";
-import {ProductManager } from "../dao/managers/ProductManager.js";
+import {dbProductManager} from "../dao/managers/dbProductManager.js";
 
-const path = "Productos.json"
 const router = Router();
-const productManager = new ProductManager(path);
+const productManager = new dbProductManager();
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res)=>{
+    try{
+        const { limit = 10, page = 1, query, sort, category } = req.query;
 
-    const products = await productManager.getProducts();
-    const limit = parseInt(req.query.limit);
-    
-    if(isNaN(limit) || limit < 0){
-        return res.send({
-         status:"succes",
-        productos: products
-    })
+
+    const options = {
+      limit: parseInt(limit, 10),
+      page: parseInt(page, 10),
+      sort: getOrderSort(sort),
+      lean: true,
+    };
+
+    const result = await productManager.getProducts(options, query, category);
+
+    const response = {
+      status: "success",
+      payload: result.docs,
+      totalPages: result.totalPages,
+      prevPage: result.prevPage,
+      nextPage: result.nextPage,
+      page: result.page,
+      hasPrevPage: result.hasPrevPage,
+      hasNextPage: result.hasNextPage,
+      prevLink: result.hasPrevPage ? `/api/dbproducts?limit=${limit}&page=${result.prevPage}&sort=${sort}&category=${category}` : null,
+      nextLink: result.hasNextPage ? `/api/dbproducts?limit=${limit}&page=${result.nextPage}&sort=${sort}&category=${category}` : null,
+    };
+
+    res.json(response);
+    }catch(error) {
+        console.error("Error al obtener productos",error)
     }
-        
-    const productslimited = products.slice(0, limit);
-    
-    res.send({
-        status:"succes",
-        productos: productslimited
-    })
 })
 
-router.get('/:pid', async (req, res) => {
+router.get("/:pid", async (req, res)=>{
 
-        const productId = req.params.pid;
-        let products = await productManager.getProductById(parseInt(productId));
+    const {pid} = req.params;
+    try{
+        const product = await productManager.getProductById(pid)
+        res.send({
+            status: "success",
+            message: product
+        })
+    }catch(error){
+        console.error("Error al obtener producto",error)
+    }
+})
+
+router.post("/", async (req, res)=>{
+
+    const newProduct = req.body;
+   
+    try{
+        const result = await productManager.addProduct(newProduct);
 
         res.send({
-            status:"succes",
-            producto: products
+            status: "success",
+            message: result
         })
-})
-
-router.post('/', async (req, res) => {
-    const product = req.body;
-
-    const products = await productManager.addProduct(product);
-
-    res.send({
-        status:"succes",
-        msg:"Producto creado",
-        productos: products
-    })
+    }catch(error){
+        console.error("Error al agregar producto".error)
+    }
     
 })
 
-router.put('/:pid', async (req, res) => {
-    const pid = parseInt(req.params.pid);
-    const product = req.body;
+router.put("/:pid", async (req, res)=>{
 
-    const pActualizado = await productManager.updateProduct(pid,product);
+    const {pid} = req.params;
+    const updateProduct = req.body;
+    try{   
+        const result = await productManager.updateProduct(pid,updateProduct);
+        res.send({
+            status: "success",
+            message: result
+        })
+    } catch(error){
+        console.error("Error al actualizar productor".error)
+    }
     
-    res.send({
-        status:"succes",
-        msg: pActualizado
-    })
 })
 
-router.delete('/:pid', async (req, res) => {
-    const pid = req.params.pid;
-    const productConfirm = await productManager.deleteProduct(pid)
+router.delete("/:pid", async (req, res)=>{
 
-    res.send({
-        status:"succes",
-        msg:`Producto con ID: ${pid} eliminado correctamente`
-    })
+    const {pid} = req.params;
+
+    try{
+        const result = await productManager.deleteProduct(pid)
+
+        res.send({
+            status: "success",
+            message: result
+        })
+    }catch(error){
+        console.error("Error al eliminar productor".error)
+    }
+ 
 })
 
-export {router as productRouter}
+export { router as productsRouter };

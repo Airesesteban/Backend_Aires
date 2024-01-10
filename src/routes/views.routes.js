@@ -43,7 +43,7 @@ router.get('/dbproducts', async (req, res) => {
         prevLink: result.hasPrevPage ? `/dbproducts?limit=${limit}&page=${result.prevPage}` : null,
         nextLink: result.hasNextPage ? `/dbproducts?limit=${limit}&page=${result.nextPage}` : null,
       };
-      res.render('dbproducts', { products: response });
+      res.render('dbproducts', { products: response, user: req.session.user });
     } catch (error) {
       console.error('Error al obtener la lista de productos:', error);
     }
@@ -76,5 +76,14 @@ router.get("/realtimeproducts",(req,res)=>{
 router.get('/chat', (req, res) => {
   res.render('chat'); 
 })
+
+router.get("/register", (req, res) => {
+  res.render('register');
+})
+
+router.get("/login", (req, res) => {
+    res.render('login');
+})
+
 
 export default router;
