@@ -27,8 +27,8 @@ router.get("/", async (req, res)=>{
       page: result.page,
       hasPrevPage: result.hasPrevPage,
       hasNextPage: result.hasNextPage,
-      prevLink: result.hasPrevPage ? `/api/dbproducts?limit=${limit}&page=${result.prevPage}&sort=${sort}&category=${category}` : null,
-      nextLink: result.hasNextPage ? `/api/dbproducts?limit=${limit}&page=${result.nextPage}&sort=${sort}&category=${category}` : null,
+      prevLink: result.hasPrevPage ? `/api/products?limit=${limit}&page=${result.prevPage}&sort=${sort}&category=${category}` : null,
+      nextLink: result.hasNextPage ? `/api/products?limit=${limit}&page=${result.nextPage}&sort=${sort}&category=${category}` : null,
     };
 
     res.json(response);
