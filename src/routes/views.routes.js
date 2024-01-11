@@ -6,7 +6,20 @@ const router = Router();
 const productManager = new dbProductManager();
 const cartManager = new dbCartManager();
 
-router.get("/", async(req, res) => {
+const publicAccess = (req,res,next) =>{
+  if(req.session.user){
+      return res.redirect('/');
+  }
+  next();
+}
+const privateAccess = (req,res,next) =>{
+  if(!req.session.user){
+      return res.redirect('/login');
+  }
+  next();
+}
+
+router.get("/",privateAccess, async(req, res) => {
     try{
         const listadeproductos = await productManager.getProducts({}, { limit: 10, page: 1, sort: 'asc' });
         res.render("home",{listadeproductos})
@@ -16,7 +29,7 @@ router.get("/", async(req, res) => {
     
 })
 
-router.get('/products', async (req, res) => {
+router.get('/products',privateAccess, async (req, res) => {
     try {
       const { limit = 5, page = 1,query, sort, category } = req.query;
         
@@ -49,7 +62,7 @@ router.get('/products', async (req, res) => {
     }
   })
   
-  router.get('/carts/:cid', async (req, res) => {
+  router.get('/carts/:cid',privateAccess, async (req, res) => {
     const { cid } = req.params;
   
     try {
@@ -69,19 +82,19 @@ router.get('/products', async (req, res) => {
 })
   
 
-router.get("/realtimeproducts",(req,res)=>{
+router.get("/realtimeproducts",publicAccess,(req,res)=>{
     res.render("realtimeproducts")
     })
 
-router.get('/chat', (req, res) => {
+router.get('/chat',publicAccess, (req, res) => {
   res.render('chat'); 
 })
 
-router.get("/register", (req, res) => {
+router.get("/register",publicAccess, (req, res) => {
   res.render('register');
 })
 
-router.get("/login", (req, res) => {
+router.get("/login",publicAccess, (req, res) => {
     res.render('login');
 })
 
