@@ -15,7 +15,7 @@ form.addeventListener("submite", e =>{
         }
     }).then(result=>{
         if(result.status === 200){
-            window.location.replace("/dbproducts")
+            window.location.replace("/products")
         }else{
             console.log(result);
         }
