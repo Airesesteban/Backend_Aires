@@ -22,7 +22,7 @@ const privateAccess = (req,res,next) =>{
 router.get("/",privateAccess, async(req, res) => {
     try{
         const listadeproductos = await productManager.getProducts({}, { limit: 10, page: 1, sort: 'asc' });
-        res.render("home",{listadeproductos})
+        res.render("home",{listadeproductos}, {user:req.session.user})
     }catch(error){
         console.error('Error al obtener la lista de productos:', error);
     }
@@ -94,8 +94,12 @@ router.get("/register",publicAccess, (req, res) => {
   res.render('register');
 })
 
-router.get("/login",publicAccess, (req, res) => {
+router.get("/login", publicAccess, (req, res) => {
     res.render('login');
+})
+
+router.get("/resetPassword", (req, res) => {
+  res.render('resetPassword');
 })
 
 

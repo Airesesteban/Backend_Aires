@@ -35,20 +35,20 @@ class dbCartManager{
 
     async addProductToCart(cid,pid,quantity){
         try {
-            const cart = await cartModel.findOne({ id: cid });
+            const cart = await cartsModel.findOne({ id: cid });
 
 
 
             if(cart){
 
-                let productsInCart = cart.product;
+                let productsInCart = cart.products;
         
                 const indexProduct = productsInCart.findIndex((product)=> product.product == pid );
                 if(indexProduct == -1){
 
-                cart.products.push(pid)({id_prod:pid, quantity:quantity})
+                cart.products.push({id_prod:pid, quantity:quantity})
                 }else{
-                    cart.product[indexProduct].quantity += quantity; 
+                    cart.products[indexProduct].quantity += quantity; 
                 }
                 await cart.save();
                 return cart
@@ -130,7 +130,7 @@ async deleteProductCart(cid,pid){
 
   async updateProductQuantity(cid, pid, quantity) {
     try {
-      const cart = await cartModel.findOne({ id: cid });
+      const cart = await cartsModel.findOne({ id: cid });
   
       if (!cart) {
         throw new Error(`Carrito con ID ${cid} no encontrado.`);

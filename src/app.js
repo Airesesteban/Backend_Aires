@@ -11,11 +11,13 @@ import {ProductManager} from './dao/managers/ProductManager.js';
 import mongoose from "mongoose";
 import messageModel from "./dao/models/message.model.js";
 import handlebars from "express-handlebars";
+import passport from 'passport';
 
 import {FsProductRouter} from "./routes/FsProducts.routes.js";
 import { FsCartRouter } from './routes/FsCarts.routes.js';
 import {dbMessageRouter} from "./routes/dbMessages.routes.js";
 import sessionRouter from "./routes/session.routes.js";
+import inicializePassport from './config/passport.config.js';
 
 
 const PORT = 8080;
@@ -24,28 +26,12 @@ const app = express();
 const httpServer = app.listen(PORT, () => console.log(`Servidor funcionando en el puerto: ${PORT}`));
 
 
-app.use(express.json());
-app.use(express.urlencoded({extended:true}))
+
 
 const MONGO = "mongodb+srv://airesesteban:Blancaoscar1@backend-aires.xckuzk8.mongodb.net/ecomerce";
 const connection = mongoose.connect(MONGO);
 
-mongoose.set("strictQuery", true);
-
-app.engine("handlebars", handlebars.engine());
-app.set("view engine", "handlebars");
-app.set("views", __dirname + "/views");
-
-app.use(express.static(__dirname + "/public"));
-
-app.use("/api/products", productsRouter);
-app.use("/api/carts", cartsRouter);
-app.use("/", viewRouter);
-
-app.use("/api/FsProducts", FsProductRouter);
-app.use("/api/FsCarts", FsCartRouter);
-app.use("/api/dbMessages", dbMessageRouter);
-app.use("/api/sessions", sessionRouter);
+mongoose.set('strictQuery', true);
 
 app.use(session({
   store: new MongoStore({
@@ -56,6 +42,29 @@ app.use(session({
   resave:false,
   saveUninitialized: false
 }))
+
+app.engine("handlebars", handlebars.engine());
+app.set("view engine", "handlebars");
+app.set("views", __dirname + "/views");
+
+app.use(express.json());
+app.use(express.urlencoded({extended:true}))
+app.use(express.static(__dirname + "/public"));
+
+inicializePassport()
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use("/api/products", productsRouter);
+app.use("/api/carts", cartsRouter);
+app.use("/", viewRouter);
+
+app.use("/api/FsProducts", FsProductRouter);
+app.use("/api/FsCarts", FsCartRouter);
+app.use("/api/dbMessages", dbMessageRouter);
+app.use("/api/sessions", sessionRouter);
+
+
 
 
 const io = new Server(httpServer);

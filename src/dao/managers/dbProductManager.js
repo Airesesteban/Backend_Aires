@@ -28,7 +28,7 @@ class dbProductManager{
         }
     }
 
-    async addProduct(){
+    async addProduct(product){
         try{
             const result = await productsModel.create(product);
 
