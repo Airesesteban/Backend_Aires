@@ -1,6 +1,6 @@
 const form = document.getElementById("loginForm");
 
-form.addeventListener("submite", e =>{
+form.addEventListener("submit", e =>{
     e.preventDefault();
     const data = new FormData(form);
     const obj = {};
@@ -9,9 +9,9 @@ form.addeventListener("submite", e =>{
 
     fetch("/api/sessions/login",{
         method: "POST",
-        body:json.stringify(obj),
+        body: JSON.stringify(obj),
         headers:{
-            "Content-Type": "application/json"
+            "Content-Type":"application/json"
         }
     }).then(result=>{
         if(result.status === 200){

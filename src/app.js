@@ -3,7 +3,7 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import { cartsRouter } from './routes/carts.routes.js';
 import { productsRouter } from './routes/products.routes.js';
-import {engine} from "express-handlebars";
+import { engine } from "express-handlebars";
 import viewRouter from "./routes/views.routes.js";
 import __dirname from "./utils.js";
 import {Server} from "socket.io";
@@ -26,12 +26,11 @@ const app = express();
 const httpServer = app.listen(PORT, () => console.log(`Servidor funcionando en el puerto: ${PORT}`));
 
 
-
+mongoose.set('strictQuery', true);
 
 const MONGO = "mongodb+srv://airesesteban:Blancaoscar1@backend-aires.xckuzk8.mongodb.net/ecomerce";
 const connection = mongoose.connect(MONGO);
 
-mongoose.set('strictQuery', true);
 
 app.use(session({
   store: new MongoStore({

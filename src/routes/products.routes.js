@@ -5,7 +5,16 @@ const router = Router();
 const productManager = new dbProductManager();
 
 router.get("/", async (req, res)=>{
-    try{
+   
+    try {
+        const products = await productManager.getProducts();
+        res.json(products);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+      }
+    });
+    /*  try{
         const { limit = 10, page = 1, query, sort, category } = req.query;
 
 
@@ -35,7 +44,7 @@ router.get("/", async (req, res)=>{
     }catch(error) {
         console.error("Error al obtener productos",error)
     }
-})
+}) */
 
 router.get("/:pid", async (req, res)=>{
 

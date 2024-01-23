@@ -1,8 +1,33 @@
 import productsModel from "../models/products.model.js";
 
 class dbProductManager{
-
-    async getProducts(query, { limit, page, sort: sortOption }){
+    async getProducts(options, query, category, sortOrder) {
+        try {
+          let filtro = {};
+    
+          if (query) {
+            filtro.$or = [
+              { title: { $regex: new RegExp(query, 'i') } },
+              { description: { $regex: new RegExp(query, 'i') } },
+              { $text: { $search: query } },
+            ];
+          }
+    
+          if (category) {
+            filtro.category = category;
+          }
+    
+          const sortOption = sortOrder === 'desc' ? { price: -1 } : { price: 1 };
+    
+          const paginacion = await productsModel.paginate(filtro, { ...options, sort: sortOption });
+    
+          return paginacion;
+        } catch (error) {
+          console.error('Error al obtener productos desde MongoDB:', error.message);
+          throw error;
+        }
+      }
+    /* async getProducts(query, { limit, page, sort: sortOption }){
         try {
             
             if (isNaN(limit) || parseInt(limit) <= 0) {
@@ -26,7 +51,7 @@ class dbProductManager{
             console.error('Error al consultar productos desde Mongo',error);
             return { error: 'Error interno del servidor.' };
         }
-    }
+    } */
 
     async addProduct(product){
         try{

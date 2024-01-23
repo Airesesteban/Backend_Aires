@@ -12,7 +12,7 @@ function obtenerCartId() {
       return;
     }
   
-    fetch(`/api/dbCarts/${cid}/products`, {
+    fetch(`/api/carts/${cid}/products`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

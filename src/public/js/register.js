@@ -1,8 +1,8 @@
 const form = document.getElementById('registerForm');
 
-form.addEventlistenener('submit',e=>{
+form.addEventListener('submit',e=>{
     e.preventDefault();
-    const data = new FormData(form)
+    const data = new FormData(form);
     const obj = {};
 
     data.forEach((value,key)=>obj[key]=value);
@@ -10,7 +10,7 @@ form.addEventlistenener('submit',e=>{
         method: "POST",
         body: JSON.stringify(obj),
         headers: {
-            "Content type": "application/json"
+            "Content-type":"application/json"
         }
     }).then(result=>result.json()).then(json=> console.log(json))
 })

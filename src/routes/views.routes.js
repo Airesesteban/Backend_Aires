@@ -7,7 +7,7 @@ const productManager = new dbProductManager();
 const cartManager = new dbCartManager();
 
 const publicAccess = (req,res,next) =>{
-  if(req.session.user){
+  if(req.session?.user){
       return res.redirect('/');
   }
   next();
@@ -30,7 +30,39 @@ router.get("/",privateAccess, async(req, res) => {
 })
 
 router.get('/products',privateAccess, async (req, res) => {
-    try {
+  try {
+    const { limit = 5, page = 1, order, category } = req.query;
+
+    
+    const options = {
+      limit: parseInt(limit, 10),
+      page: parseInt(page, 10),
+      sort: order === 'desc' ? { price: -1 } : { price: 1 },
+      lean: true
+    };
+
+    const result = await productManager.getProducts(options, null, category);
+
+    const response = {
+      status: 'success',
+      payload: result.docs,
+      totalPages: result.totalPages,
+      prevPage: result.prevPage,
+      nextPage: result.nextPage,
+      page: result.page,
+      hasPrevPage: result.hasPrevPage,
+      hasNextPage: result.hasNextPage,
+      prevLink: result.hasPrevPage ? `/products?limit=${limit}&page=${result.prevPage}` : null,
+      nextLink: result.hasNextPage ? `/products?limit=${limit}&page=${result.nextPage}` : null,
+    };
+    res.render('products', { products: response, user: req.session.user });
+  } catch (error) {
+    console.error('Error al obtener la lista de productos:', error.message);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+  
+  /* try {
       const { limit = 5, page = 1,query, sort, category } = req.query;
         
       const sortOption = sort === 'desc' ? '-price' : 'price'
@@ -60,7 +92,7 @@ router.get('/products',privateAccess, async (req, res) => {
     } catch (error) {
       console.error('Error al obtener la lista de productos:', error);
     }
-  })
+  }) */
   
   router.get('/carts/:cid',privateAccess, async (req, res) => {
     const { cid } = req.params;
