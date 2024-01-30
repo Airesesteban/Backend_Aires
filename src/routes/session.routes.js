@@ -73,9 +73,27 @@ router.post("/restartPassword", async (req, res) =>{
         message: "Contraseña restaurada"
     })
 })
-/* 
-router.get("/current", async (req, res) => {
-    res.send
-}) */
+
+router.get("/current", (req, res) => {
+    try {
+        if (req.session && req.session.user) {
+            res.status(200).json({
+                status: "success",
+                user: req.session.user
+            });
+        } else {
+            res.status(401).json({
+                status: "error",
+                message: "No hay sesión de usuario activa"
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            status: "error",
+            message: "Error al obtener el usuario actual"
+        });
+    }
+});
 
 export default router;
