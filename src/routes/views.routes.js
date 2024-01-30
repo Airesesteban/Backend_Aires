@@ -62,37 +62,7 @@ router.get('/products',privateAccess, async (req, res) => {
   }
 });
   
-  /* try {
-      const { limit = 5, page = 1,query, sort, category } = req.query;
-        
-      const sortOption = sort === 'desc' ? '-price' : 'price'
 
-      const options = {
-        limit: parseInt(limit, 10),
-        page: parseInt(page, 10),
-        sort: sortOption,
-        lean:true,
-      };
-  
-      const result = await productManager.getProducts(options,limit, query, category);
-  
-      const response = {
-        status: 'success',
-        payload: result.docs,
-        totalPages: result.totalPages,
-        prevPage: result.prevPage,
-        nextPage: result.nextPage,
-        page: result.page,
-        hasPrevPage: result.hasPrevPage,
-        hasNextPage: result.hasNextPage,
-        prevLink: result.hasPrevPage ? `/products?limit=${limit}&page=${result.prevPage}` : null,
-        nextLink: result.hasNextPage ? `/products?limit=${limit}&page=${result.nextPage}` : null,
-      };
-      res.render('products', { products: response, user: req.session.user });
-    } catch (error) {
-      console.error('Error al obtener la lista de productos:', error);
-    }
-  }) */
   
   router.get('/carts/:cid',privateAccess, async (req, res) => {
     const { cid } = req.params;

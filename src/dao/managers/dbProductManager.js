@@ -27,32 +27,7 @@ class dbProductManager{
           throw error;
         }
       }
-    /* async getProducts(query, { limit, page, sort: sortOption }){
-        try {
-            
-            if (isNaN(limit) || parseInt(limit) <= 0) {
-              return "Error: 'limit' debe ser un número positivo.";
-            }
-
-          
-            if (isNaN(page) || parseInt(page) <= 0) {
-              return "Error: 'page' debe ser un número positivo.";
-            }
-
-            
-            if (sortOption !== 'price' && sortOption !== '-price' && sortOption !== null) {
-              return "Error: 'sort' debe ser 'asc', 'desc' o null.";
-            }
-              
-          const products = await productsModel.paginate(query, { limit, page, sort: sortOption });
-          return products
-
-        }catch(error){
-            console.error('Error al consultar productos desde Mongo',error);
-            return { error: 'Error interno del servidor.' };
-        }
-    } */
-
+   
     async addProduct(product){
         try{
             const result = await productsModel.create(product);

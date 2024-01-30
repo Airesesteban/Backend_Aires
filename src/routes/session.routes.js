@@ -73,5 +73,9 @@ router.post("/restartPassword", async (req, res) =>{
         message: "Contraseña restaurada"
     })
 })
+/* 
+router.get("/current", async (req, res) => {
+    res.send
+}) */
 
 export default router;

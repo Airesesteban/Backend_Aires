@@ -8,8 +8,15 @@ const schema = new mongoose.Schema({
     email: String,
     age: Number,
     password: String,
+    cart: {
+        type:
+           {
+            type: mongoose.Schema.Types.ObjectId,
+            ref:"Carts"
+           } 
+    },
     role: { type: String, enum: ["admin", "usuario"], default: "usuario" }
-})    
+});    
 
 const userModel = mongoose.model(collection, schema);
 
