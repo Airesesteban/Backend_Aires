@@ -1,22 +1,27 @@
 import {Router} from    "express";
-import userModel from "../dao/models/users.model.js";
-import { createHash, validatePassword } from "../utils.js";
+/* import userModel from "../dao/models/users.model.js";
+import { createHash, validatePassword } from "../utils.js"; */
 import passport from "passport";
+import { register, restartPassword, gitHubCallBack, failRegister, login } from "../controllers/session.controller.js";
 
 const router =  Router();
 
-
-router.post("/register",passport.authenticate("register", {failureRedirect:"/api/session/failregister"}),
+router.post("/register",passport.authenticate("register", {failureRedirect:"/api/session/failregister"}),register);
+/* router.post("/register",passport.authenticate("register", {failureRedirect:"/api/session/failregister"}),
 async (req, res) => {
     res.send({status: "success", message:"Usuario registrado"})
 }
-)
-router.get("/failRegister", async (req, res) => {
+) */
+
+router.get("/failRegister",failRegister);
+/* router.get("/failRegister", async (req, res) => {
     console.log("Fallo el registro");
     res.send({error: "Fallo el registro"})
 })
+ */
 
-router.post('/login',passport.authenticate("login",{failureRedirect:"/api/sessions/faillogin"}),
+router.post('/login',passport.authenticate("login",{failureRedirect:"/api/sessions/faillogin"}),login);
+/* router.post('/login',passport.authenticate("login",{failureRedirect:"/api/sessions/faillogin"}),
     async (req,res)=>{
         if(!req.user){
             return res.status(400).send({status:"error"})
@@ -29,7 +34,7 @@ router.post('/login',passport.authenticate("login",{failureRedirect:"/api/sessio
         }
         res.send({status:"success", payload:req.user})
     }
-)
+) */
 
 router.get("/faillogin", (req, res) => {
     res.send({error: "fail login"})
@@ -37,10 +42,11 @@ router.get("/faillogin", (req, res) => {
 
 router.get("/github", passport.authenticate("github",{scope:["user:email"]}), async(req, res)=>{});
 
-router.get("/githubcallback", passport.authenticate("github",{failureRedirect:"/login"}), async(req, res)=>{
+router.get("/githubcallback", passport.authenticate("github",{failureRedirect:"/login"}),gitHubCallBack);
+/* router.get("/githubcallback", passport.authenticate("github",{failureRedirect:"/login"}), async(req, res)=>{
     req.session.user = req.user;
     res.redirect("/")
-});
+}); */
 
 router.get("/logout", (req, res) =>{
     req.session.destroy(err=>{
@@ -54,7 +60,8 @@ router.get("/logout", (req, res) =>{
     })
 })
 
-router.post("/restartPassword", async (req, res) =>{
+router.post("/restartPassword",restartPassword);
+/* router.post("/restartPassword", async (req, res) =>{
     const {email,password} = req.body;
     if(!email || !password) return res.status(400).send({
                 status: "error",
@@ -72,7 +79,7 @@ router.post("/restartPassword", async (req, res) =>{
         status: "success",
         message: "Contraseña restaurada"
     })
-})
+}) */
 
 router.get("/current", (req, res) => {
     try {
