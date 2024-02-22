@@ -1,11 +1,11 @@
-import {dbProductManager} from "../dao/managers/dbProductManager.js";
+import ProductsRepository from "../repositories/products.repository.js";
 
-const productManager = new dbProductManager();
+const productsRepository = new ProductsRepository();
 
 async function getProducts(req, res)  {
    
     try {
-        const products = await productManager.getProducts();
+        const products = await productsRepository.getProducts();
         res.json(products);
       } catch (error) {
         console.error(error);
@@ -17,7 +17,7 @@ async function getProducts(req, res)  {
 
         const {pid} = req.params;
         try{
-            const product = await productManager.getProductById(pid)
+            const product = await productsRepository.getProductById(pid)
             res.send({
                 status: "success",
                 message: product
@@ -32,7 +32,7 @@ async function getProducts(req, res)  {
         const newProduct = req.body;
        
         try{
-            const result = await productManager.addProduct(newProduct);
+            const result = await productsRepository.addProduct(newProduct);
     
             res.send({
                 status: "success",
@@ -49,7 +49,7 @@ async function getProducts(req, res)  {
         const {pid} = req.params;
         const updateProduct = req.body;
         try{   
-            const result = await productManager.updateProduct(pid,updateProduct);
+            const result = await productsRepository.updateProduct(pid,updateProduct);
             res.send({
                 status: "success",
                 message: result
@@ -65,7 +65,7 @@ async function getProducts(req, res)  {
         const {pid} = req.params;
     
         try{
-            const result = await productManager.deleteProduct(pid)
+            const result = await productsRepository.deleteProduct(pid)
     
             res.send({
                 status: "success",

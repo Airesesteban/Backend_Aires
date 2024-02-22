@@ -1,15 +1,9 @@
 import {Router} from "express";
 import { getAllMessages } from "../controllers/dbMessage.controller.js";
-/* import messageModel from "../dao/models/message.model.js"; */
+import { checkRole } from "../middlewares/auth.js";
 
 const router = Router();
 
-router.get("/",getAllMessages);
-
-/* router.get("/", async (req, res) => {
-    const message = await messageModel.find();
-    res.send({messages});
-
-}); */
+router.get("/",checkRole(["user"]) ,getAllMessages);
 
 export { router as dbMessageRouter}

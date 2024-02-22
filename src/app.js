@@ -22,7 +22,6 @@ import inicializePassport from './config/passport.config.js';
 import { config } from "./config/config.js";
 
 const PORT = config.server.port;
-//const PORT = 8080;
 const app = express();
 
 const httpServer = app.listen(PORT, () => console.log(`Servidor funcionando en el puerto: ${PORT}`));
@@ -30,9 +29,7 @@ const httpServer = app.listen(PORT, () => console.log(`Servidor funcionando en e
 
 mongoose.set('strictQuery', true);
 
-//const MONGO = "mongodb+srv://airesesteban:Blancaoscar1@backend-aires.xckuzk8.mongodb.net/ecomerce";
 const connection = mongoose.connect(config.mongo.url);
-//const connection = mongoose.connect(MONGO);
 
 
 app.use(session({

@@ -1,16 +1,12 @@
-import { dbCartManager } from "../dao/managers/dbCartManager.js";
-import cartsModel from "../dao/models/carts.model.js";
+import CartsRepository from "../repositories/carts.repository.js";
 
-
-const cartManager = new dbCartManager();
+const cartsRepository = new CartsRepository();
 
 async function getCartById(req, res)  {
 
     const cid = req.params.cid;
 
-    const cart = await cartsModel
-      .findOne({ id: cid })
-      .populate('products.product');
+    const cart = await cartsRepository.getCartById(cid);
 
     if (cart) {
         res.send({
@@ -27,7 +23,7 @@ async function getCartById(req, res)  {
 
 async function addCart (req, res) {
    
-    const newCart = await cartManager.addCart();
+    const newCart = await cartsRepository.addCart();
 
     if (newCart){
         res.send({
@@ -47,7 +43,7 @@ async function addProductToCart (req,res) {
     const pid = req.params.pid;
     const quantity = req.body.quantity;
 
-    const result = await cartManager.addProductToCart(cid, pid,quantity);
+    const result = await cartsRepository.addProductToCart(cid, pid,quantity);
 
     res.send({
         status:"succes",
@@ -59,7 +55,7 @@ async function deleteProductCart (req,res) {
     const {cid,pid}=req.params
 
     try {
-        const result = await cartManager.deleteProductCart(cid,pid)
+        const result = await cartsRepository.deleteProductCart(cid,pid)
             res.send({
                 status:"succes",
                 msg: result
@@ -73,7 +69,7 @@ async function deleteAllProductsFromCart (req, res) {
     const { cid } = req.params;
   
     try {
-      const cart = await cartManager.deleteAllProductsFromCart({ id: cid });
+      const cart = await cartsRepository.deleteAllProductsFromCart({ id: cid });
   
       if (cart) {
         res.send({
@@ -96,7 +92,7 @@ async function deleteAllProductsFromCart (req, res) {
     const { quantity } = req.body;
 
     try {
-        const result = await cartManager.updateProductQuantity(cid, pid, quantity);
+        const result = await cartsRepository.updateProductQuantity(cid, pid, quantity);
 
         res.send({
             status:"succes",
@@ -112,13 +108,27 @@ async function updateCart (req,res) {
     const updatedProducts = req.body;
 
   try {
-    const result = await cartManager.updateCart(cid, updatedProducts);
+    const result = await cartsRepository.updateCart(cid, updatedProducts);
     res.send({
         status:"succes",
         msg: result
     })
   } catch (error) {
     console.error("Error al agregar", error);
+  }
+}
+
+async function purchase (req,res) {
+    const cid = req.params.cid;
+  
+  try {
+    const result = await cartsRepository.purchase(cid);
+    res.send({
+        status:"succes",
+        msg: result
+    })
+  } catch (error) {
+    console.error("Error al comprar", error);
   }
 }
 
@@ -129,5 +139,6 @@ export {
     deleteProductCart,
     deleteAllProductsFromCart,
     updateProductQuantity,
-    updateCart
+    updateCart,
+    purchase
 };
