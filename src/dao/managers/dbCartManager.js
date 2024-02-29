@@ -18,7 +18,7 @@ class dbCartManager{
     async getCartById(id){
         try {
           const cart = await cartsModel
-          .findOne({ id: id })
+          .findOne({ _id: id })
           .populate('products.product');
             return cart;
         }
@@ -41,7 +41,7 @@ class dbCartManager{
 
     async addProductToCart(cid,pid,quantity){
         try {
-            const cart = await cartsModel.findOne({ id: cid });
+            const cart = await cartsModel.findOne({ _id: cid });
 
 
 
@@ -98,7 +98,7 @@ async deleteProductCart(cid,pid){
 
   async deleteAllProductsFromCart(cid) {
     try {
-      const cart = await cartsModel.findOne({ id: cid});
+      const cart = await cartsModel.findOne({ _id: cid});
 
       if (!cart) {
         return(`Carrito con ID ${cid} no encontrado.`);
@@ -118,7 +118,7 @@ async deleteProductCart(cid,pid){
 
   async updateCart(cid, updatedProducts) {
     try {
-      const cart = await cartsModel.findOne({ id: cid });
+      const cart = await cartsModel.findOne({ _id: cid });
   
       if (!cart) {
         return(`Carrito con ID ${cid} no encontrado.`);
@@ -136,7 +136,7 @@ async deleteProductCart(cid,pid){
 
   async updateProductQuantity(cid, pid, quantity) {
     try {
-      const cart = await cartsModel.findOne({ id: cid });
+      const cart = await cartsModel.findOne({ _id: cid });
   
       if (!cart) {
         throw new Error(`Carrito con ID ${cid} no encontrado.`);

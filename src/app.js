@@ -12,6 +12,7 @@ import mongoose from "mongoose";
 import messageModel from "./dao/models/message.model.js";
 import handlebars from "express-handlebars";
 import passport from 'passport';
+import {errorHandler} from "./middlewares/errorHandler.js"
 
 import {FsProductRouter} from "./routes/FsProducts.routes.js";
 import { FsCartRouter } from './routes/FsCarts.routes.js';
@@ -49,6 +50,7 @@ app.set("views", __dirname + "/views");
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 app.use(express.static(__dirname + "/public"));
+app.use(errorHandler);
 
 inicializePassport()
 app.use(passport.initialize());

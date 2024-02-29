@@ -42,7 +42,7 @@ class dbProductManager{
 
     async getProductById(id){
         try{
-            const product = await productsModel.findOne({id:id});
+            const product = await productsModel.findOne({_id:id});
             return product;
 
         }catch(error){
