@@ -14,6 +14,7 @@ import handlebars from "express-handlebars";
 import passport from 'passport';
 import {errorHandler} from "./middlewares/errorHandler.js"
 
+import mockRouter from './routes/mockRouter.js';
 import {FsProductRouter} from "./routes/FsProducts.routes.js";
 import { FsCartRouter } from './routes/FsCarts.routes.js';
 import {dbMessageRouter} from "./routes/dbMessages.routes.js";
@@ -64,6 +65,7 @@ app.use("/api/FsProducts", FsProductRouter);
 app.use("/api/FsCarts", FsCartRouter);
 app.use("/api/dbMessages", dbMessageRouter);
 app.use("/api/sessions", sessionRouter);
+app.use('/api', mockRouter);
 
 
 
