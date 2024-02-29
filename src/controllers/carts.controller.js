@@ -122,7 +122,7 @@ async function purchase (req,res) {
     const cid = req.params.cid;
   
   try {
-    const result = await cartsRepository.purchase(cid);
+    const result = await cartsRepository.purchase(cid, req);
     res.send({
         status:"succes",
         msg: result

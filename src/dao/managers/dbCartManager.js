@@ -2,6 +2,7 @@ import cartsModel from "../models/carts.model.js";
 import productsModel from "../models/products.model.js";
 import {v4 as uuidv4} from 'uuid';
 import ticketsModel from "../models/tickets.model.js";
+import moment from 'moment';
 
 class dbCartManager{
 
@@ -40,7 +41,36 @@ class dbCartManager{
     }
 
     async addProductToCart(cid,pid,quantity){
-        try {
+      try {
+        const cart = await cartsModel.findOne({ id: cid });
+    
+        if (!cart) {
+          throw new Error(`Carrito con ID ${cid} no encontrado.`);
+        }
+    
+        const existingProduct = cart.products.find((p) => p.product.toString() === productId.toString());
+    
+        if (existingProduct) {
+          existingProduct.quantity += quantity;
+        } else {
+          const product = await productsModel.findOne({ _id: pid });
+    
+          if (!product) {
+            throw new Error(`Producto con ID ${pid} no encontrado.`);
+          }
+    
+          cart.products.push({ product: product._id, quantity });
+        }
+    
+        await cart.save();
+    
+        return cart;
+      } catch (error) {
+        console.error('Error al agregar un producto al carrito en MongoDB:', error.message);
+        throw error;
+      }
+    }
+       /*  try {
             const cart = await cartsModel.findOne({ _id: cid });
 
 
@@ -67,7 +97,7 @@ class dbCartManager{
         catch(error){
             console.error("Error en agregar carrito",error);
         }
-    }
+    } */
 
 async deleteProductCart(cid,pid){
     try { 
@@ -163,20 +193,26 @@ async deleteProductCart(cid,pid){
       console.error(`Error al actualizar la cantidad del producto en el carrito`,error);
     }
   }
-  async purchase(cid){
+  async purchase(cid, req){
     try {
 
-      const cart = await cartsModel.findById(cid);
+      const cart = await cartsModel.findOne({ id: cid });
       if(cart){
           if(!cart.products.length){
               return ("es necesario que agrege productos antes de realizar la compra")
           }
           const ticketProducts = [];
           const rejectedProducts = [];
+
           for(let i=0; i<cart.products.length;i++){
               const cartProduct = cart.products[i];
-              const productDB = await productsModel.findById(cartProduct.id);
-              if(cartProduct.quantity<=productDB.stock){
+              console.log(`ID de Producto en el Carrito: ${cartProduct.id}`);
+              const productDB = await productsModel.findById(cartProduct.product);
+              console.log(productDB)
+              if (!productDB) {
+                throw new Error(`Producto con ID ${cartProduct.id} no encontrado.`);
+              }
+              if (cartProduct.quantity <= (productDB.stock || 0)){
                   ticketProducts.push(cartProduct);
               } else {
                   rejectedProducts.push(cartProduct);
@@ -184,11 +220,12 @@ async deleteProductCart(cid,pid){
           }
           console.log("ticketProducts",ticketProducts)
           console.log("rejectedProducts",rejectedProducts)
+
           const newTicket = {
               code:uuidv4(),
-              purchase_datetime: new Date().toLocaleString(),
+              purchase_datetime: moment().format(),
               amount:500,
-              purchaser:req.user.email
+              purchaser: req && req.user ? req.user.email : "Usuario no disponible"
           }
           const ticketCreated = await ticketsModel.create(newTicket);
           return ticketCreated;
