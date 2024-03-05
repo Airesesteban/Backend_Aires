@@ -1,4 +1,7 @@
 import CartsRepository from "../repositories/carts.repository.js";
+import { EError } from "../enums/EError.js";
+import { CustomError } from "../services/customError.service.js";
+import { generateAddCartError } from "../services/cartError.service.js";
 
 const cartsRepository = new CartsRepository();
 
@@ -31,10 +34,12 @@ async function addCart (req, res) {
             msg:"Nuevo carrito agregado"
         })
     }else{
-        res.send({
-            status:"error",
-            msg:"Error al agregar o carrito inexistente"
-        })
+        CustomError.createError({
+            name:"Cart Creation Error",
+            cause: generateAddCartError,
+            message:"Error creando el carrito o inexistente",
+            errorCode:EError.CART_CREATION_ERROR
+        });
     }
 }
 
@@ -114,7 +119,7 @@ async function updateCart (req,res) {
         msg: result
     })
   } catch (error) {
-    console.error("Error al agregar", error);
+    console.error("Error al actualizar", error);
   }
 }
 

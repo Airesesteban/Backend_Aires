@@ -1,4 +1,8 @@
 import ProductsRepository from "../repositories/products.repository.js";
+import { EError } from "../enums/EError.js";
+import { CustomError } from "../services/customError.service.js";
+import { generateAddProductError } from "../services/productError.service.js";
+
 
 const productsRepository = new ProductsRepository();
 
@@ -8,8 +12,7 @@ async function getProducts(req, res)  {
         const products = await productsRepository.getProducts();
         res.json(products);
       } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        throw CustomError.createError({name:"DatabaseError",message:"Error interno del servidor",errorCode:EError.DATABASE_ERROR, cause:error})
       }
     }
 
@@ -39,7 +42,12 @@ async function getProducts(req, res)  {
                 message: result
             })
         }catch(error){
-            console.error("Error al agregar producto".error)
+            CustomError.createError({
+                name:"Product Creation Error",
+                cause:generateAddProductError,
+                message:"Error al agregar producto",
+                errorCode:EError.PRODUCT_CREATION_ERROR
+            })
         }
         
     }

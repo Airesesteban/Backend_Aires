@@ -6,7 +6,6 @@ export  const errorHandler = (error, req ,res, next) => {
             res.json({status:"error",error:error.cause, message:error.message})
             break;
         case EError.AUTH_ERROR:
-            
             break;
         case EError.DATABASE_ERROR:
             res.json({status:"error", message:error.message})
@@ -16,7 +15,13 @@ export  const errorHandler = (error, req ,res, next) => {
             break;
         case EError.UNAUTHORIZED_ERROR:
             res.json({status:"error",error:error.cause, message:error.message})
-            break;                
+            break;
+        case EError.PRODUCT_CREATION_ERROR:
+            res.json({status:"error",error:error.cause, message:error.message})
+            break;       
+        case EError.CART_CREATION_ERROR:
+            res.json({status:"error",error:error.cause, message:error.message})
+            break;                               
     
         default:
             res.json({status:"error", message:"Hubo un error, conacte al equipo de sistemas."})

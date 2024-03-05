@@ -13,8 +13,10 @@ import messageModel from "./dao/models/message.model.js";
 import handlebars from "express-handlebars";
 import passport from 'passport';
 import {errorHandler} from "./middlewares/errorHandler.js"
+import { addLogger } from './helpers/logger.js';
 
 import mockRouter from './routes/mockRouter.js';
+import loggerTestRouter from "./routes/loggerTestRouter.js";
 import {FsProductRouter} from "./routes/FsProducts.routes.js";
 import { FsCartRouter } from './routes/FsCarts.routes.js';
 import {dbMessageRouter} from "./routes/dbMessages.routes.js";
@@ -52,6 +54,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 app.use(express.static(__dirname + "/public"));
 app.use(errorHandler);
+app.use(addLogger);
 
 inicializePassport()
 app.use(passport.initialize());
@@ -66,6 +69,7 @@ app.use("/api/FsCarts", FsCartRouter);
 app.use("/api/dbMessages", dbMessageRouter);
 app.use("/api/sessions", sessionRouter);
 app.use('/api', mockRouter);
+app.use("/api", loggerTestRouter);
 
 
 
