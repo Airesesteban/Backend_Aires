@@ -63,7 +63,8 @@ async function getProducts(req, res)  {
                 message: result
             })
         } catch(error){
-            console.error("Error al actualizar productor".error)
+            req.logger.info("Error al actualizar producto", error);
+            //console.error("Error al actualizar productor".error)
         }
         
     }
@@ -80,7 +81,8 @@ async function getProducts(req, res)  {
                 message: result
             })
         }catch(error){
-            console.error("Error al eliminar productor".error)
+            req.logger.info("Error al eliminar producto", error);
+            //console.error("Error al eliminar productor".error)
         }
      
     }

@@ -7,7 +7,8 @@ async function register(req, res)  {
 }
 
 async function failRegister (req, res) {
-    console.log("Fallo el registro");
+    req.logger.http("Fallo en el registro", error);
+    //console.log("Fallo el registro");
     res.send({error: "Fallo el registro"})
 }
 

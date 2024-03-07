@@ -66,7 +66,8 @@ async function deleteProductCart (req,res) {
                 msg: result
             })
       } catch (error) {
-        console.error("Error al eliminar", error);
+        req.logger.info("Error al eliminar", error);
+        //console.error("Error al eliminar", error);
     }
 }
 
@@ -88,7 +89,7 @@ async function deleteAllProductsFromCart (req, res) {
         })
       }
     } catch (error) {
-        console.error("Error al eliminar", error);
+        req.logger.info("Error al eliminar", error);
     }
   }
 
@@ -104,7 +105,7 @@ async function deleteAllProductsFromCart (req, res) {
             msg: result
         })
     } catch (error) {
-        console.error("Error", error);
+        req.logger.warning("Error", error);
   }
 }
 
@@ -119,7 +120,8 @@ async function updateCart (req,res) {
         msg: result
     })
   } catch (error) {
-    console.error("Error al actualizar", error);
+    req.logger.info("Error al actualizar", error);
+    //console.error("Error al actualizar", error);
   }
 }
 
@@ -133,7 +135,8 @@ async function purchase (req,res) {
         msg: result
     })
   } catch (error) {
-    console.error("Error al comprar", error);
+    req.logger.info("Error al comprar", error);
+    //console.error("Error al comprar", error);
   }
 }
 
