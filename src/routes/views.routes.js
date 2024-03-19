@@ -1,5 +1,6 @@
 import {Router} from  "express";
 import { detalleCarrito, listaProductos, productos } from "../controllers/views.controller.js";
+import { verifyEmailTokenMW } from "../middlewares/auth.js"
 
 const router = Router();
 
@@ -38,9 +39,14 @@ router.get("/login", publicAccess, (req, res) => {
     res.render('login');
 })
 
-router.get("/resetPassword", (req, res) => {
-  res.render('resetPassword');
+router.get("/resetPassword", verifyEmailTokenMW(), (req, res) => {
+  const token = req.query.token;
+  res.render('resetPassword',{token});
 })
 
+router.get("/forgot-password", (req,res)=>{
+
+  res.render("forgot-password");
+})
 
 export default router;

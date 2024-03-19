@@ -1,6 +1,6 @@
 import {Router} from    "express";
 import passport from "passport";
-import { register, restartPassword, gitHubCallBack, failRegister, login } from "../controllers/session.controller.js";
+import { register, restartPassword, forgotPassword, gitHubCallBack, failRegister, login } from "../controllers/session.controller.js";
 import { GetUserDto }   from "../dao/dto/user.dto.js";
 
 const router =  Router();
@@ -36,6 +36,8 @@ router.get("/logout", (req, res) =>{
 })
 
 router.post("/restartPassword",restartPassword);
+
+router.post("/forgot-password",forgotPassword);
 
 
 router.get("/current", (req, res) => {

@@ -3,6 +3,7 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import { cartsRouter } from './routes/carts.routes.js';
 import { productsRouter } from './routes/products.routes.js';
+import { userRouter } from './routes/users.routes.js';
 import { engine } from "express-handlebars";
 import viewRouter from "./routes/views.routes.js";
 import __dirname from "./utils.js";
@@ -70,6 +71,7 @@ app.use("/api/dbMessages", dbMessageRouter);
 app.use("/api/sessions", sessionRouter);
 app.use('/api', mockRouter);
 app.use("/api", loggerTestRouter);
+app.use("/api/users", userRouter);
 
 
 

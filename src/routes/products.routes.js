@@ -6,8 +6,8 @@ const router = Router();
 
 router.get("/",getProducts);
 router.get("/:pid",getProductById);
-router.post("/" ,checkRole(["admin"]) ,addProduct);
+router.post("/" ,checkRole(["admin","premium"]) ,addProduct);
 router.put("/:pid",checkRole(["admin"]) ,updateProduct);
-router.delete("/:pid",checkRole(["admin"]) ,deleteProduct);
+router.delete("/:pid",checkRole(["admin","premium"]) ,deleteProduct);
 
 export { router as productsRouter };

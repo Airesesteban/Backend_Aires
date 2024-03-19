@@ -11,5 +11,10 @@ export const config = {
     },
     mongo:{
         url: MONGO_URL
-    }
+    },
+    gmail:{
+        emailToken:process.env.SECRET_TOKEN_EMAIL,
+        adminAccount: process.env.ADMIN_EMAIL,
+        adminPass: process.env.ADMIN_PASS
+        }
 }

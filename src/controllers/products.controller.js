@@ -1,15 +1,14 @@
-import ProductsRepository from "../repositories/products.repository.js";
+import { ProductsService } from "../repositories/index.js";
 import { EError } from "../enums/EError.js";
 import { CustomError } from "../services/customError.service.js";
 import { generateAddProductError } from "../services/productError.service.js";
 
 
-const productsRepository = new ProductsRepository();
 
 async function getProducts(req, res)  {
    
     try {
-        const products = await productsRepository.getProducts();
+        const products = await ProductsService.getProducts();
         res.json(products);
       } catch (error) {
         throw CustomError.createError({name:"DatabaseError",message:"Error interno del servidor",errorCode:EError.DATABASE_ERROR, cause:error})
@@ -20,7 +19,7 @@ async function getProducts(req, res)  {
 
         const {pid} = req.params;
         try{
-            const product = await productsRepository.getProductById(pid)
+            const product = await ProductsService.getProductById(pid)
             res.send({
                 status: "success",
                 message: product
@@ -31,11 +30,10 @@ async function getProducts(req, res)  {
     }
 
     async function addProduct (req, res) {
-
-        const newProduct = req.body;
-       
         try{
-            const result = await productsRepository.addProduct(newProduct);
+            const newProduct = req.body;
+            product.owner = req.user._id;
+            const result = await ProductsService.addProduct(newProduct);
     
             res.send({
                 status: "success",
@@ -57,7 +55,7 @@ async function getProducts(req, res)  {
         const {pid} = req.params;
         const updateProduct = req.body;
         try{   
-            const result = await productsRepository.updateProduct(pid,updateProduct);
+            const result = await ProductsService.updateProduct(pid,updateProduct);
             res.send({
                 status: "success",
                 message: result
@@ -70,19 +68,23 @@ async function getProducts(req, res)  {
     }
 
     async function deleteProduct (req, res) {
-
-        const {pid} = req.params;
-    
         try{
-            const result = await productsRepository.deleteProduct(pid)
-    
-            res.send({
-                status: "success",
-                message: result
-            })
+            const productId = req.params;
+            const product = await ProductsService.getProductById(productId);
+            if(product){
+                const productOwner = JSON.parse(JSON.stringify(product.owner));
+                const userId = JSON.parse(JSON.stringify(req.user._id));
+                if((req.user.rol === "premium" && productOwner == userId) || req.user.rol === "admin"){
+                    await ProductsService.deleteProduct(productId);
+                    return res.json({status:"success", message:"producto eliminado"});
+                }else {
+                    res.json({status:"error", message:"no tienes permiso para borrar este producto"});
+                }
+            }else{
+                return res.json({status:"error", message:"El producto no existe"});
+            }
         }catch(error){
             req.logger.info("Error al eliminar producto", error);
-            //console.error("Error al eliminar productor".error)
         }
      
     }

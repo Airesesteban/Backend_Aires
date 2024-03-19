@@ -1,15 +1,15 @@
-import CartsRepository from "../repositories/carts.repository.js";
+import { CartsService } from "../repositories/index.js";
+import { ProductsService } from "../repositories/index.js";
 import { EError } from "../enums/EError.js";
 import { CustomError } from "../services/customError.service.js";
 import { generateAddCartError } from "../services/cartError.service.js";
 
-const cartsRepository = new CartsRepository();
 
 async function getCartById(req, res)  {
 
     const cid = req.params.cid;
 
-    const cart = await cartsRepository.getCartById(cid);
+    const cart = await CartsService.getCartById(cid);
 
     if (cart) {
         res.send({
@@ -25,8 +25,8 @@ async function getCartById(req, res)  {
 }
 
 async function addCart (req, res) {
-   
-    const newCart = await cartsRepository.addCart();
+
+    const newCart = await CartsService.addCart();
 
     if (newCart){
         res.send({
@@ -48,26 +48,41 @@ async function addProductToCart (req,res) {
     const pid = req.params.pid;
     const quantity = req.body.quantity;
 
-    const result = await cartsRepository.addProductToCart(cid, pid,quantity);
+    const isPremium = req.user.premium;
 
-    res.send({
-        status:"succes",
-        msg: result
-    })
+    try {
+        if (isPremium){
+            const product = await ProductsService.getProductById(pid);
+            if(product.owner === req.user.id){
+                res.send({
+                    status:"error",
+                    msg:"No puedes agregar tu propio producto al carrito"
+                })
+            }
+        }
+        const result = await CartsService.addProductToCart(cid, pid,quantity);
+
+        res.send({
+            status:"succes",
+            msg: result
+        })
+    } catch (error) {
+        console.error("Error al agregar producto al carrito:", error);
+        res.status.json({ status: "error", message: "Error al agregar producto al carrito" }); 
+    }
 }
 
 async function deleteProductCart (req,res) {
     const {cid,pid}=req.params
 
     try {
-        const result = await cartsRepository.deleteProductCart(cid,pid)
+        const result = await CartsService.deleteProductCart(cid,pid)
             res.send({
                 status:"succes",
                 msg: result
             })
       } catch (error) {
         req.logger.info("Error al eliminar", error);
-        //console.error("Error al eliminar", error);
     }
 }
 
@@ -75,7 +90,7 @@ async function deleteAllProductsFromCart (req, res) {
     const { cid } = req.params;
   
     try {
-      const cart = await cartsRepository.deleteAllProductsFromCart({ id: cid });
+      const cart = await CartsService.deleteAllProductsFromCart({ id: cid });
   
       if (cart) {
         res.send({
@@ -98,7 +113,7 @@ async function deleteAllProductsFromCart (req, res) {
     const { quantity } = req.body;
 
     try {
-        const result = await cartsRepository.updateProductQuantity(cid, pid, quantity);
+        const result = await CartsService.updateProductQuantity(cid, pid, quantity);
 
         res.send({
             status:"succes",
@@ -114,7 +129,7 @@ async function updateCart (req,res) {
     const updatedProducts = req.body;
 
   try {
-    const result = await cartsRepository.updateCart(cid, updatedProducts);
+    const result = await CartsService.updateCart(cid, updatedProducts);
     res.send({
         status:"succes",
         msg: result
@@ -129,7 +144,7 @@ async function purchase (req,res) {
     const cid = req.params.cid;
   
   try {
-    const result = await cartsRepository.purchase(cid, req);
+    const result = await CartsService.purchase(cid, req);
     res.send({
         status:"succes",
         msg: result
