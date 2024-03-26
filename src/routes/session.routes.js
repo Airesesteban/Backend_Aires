@@ -37,7 +37,7 @@ router.get("/logout", (req, res) =>{
 
 router.post("/restartPassword",restartPassword);
 
-router.post("/forgot-password",forgotPassword);
+router.post("/forgotPassword",forgotPassword);
 
 
 router.get("/current", (req, res) => {

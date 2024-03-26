@@ -44,9 +44,9 @@ router.get("/resetPassword", verifyEmailTokenMW(), (req, res) => {
   res.render('resetPassword',{token});
 })
 
-router.get("/forgot-password", (req,res)=>{
+router.get("/forgotPassword", (req,res)=>{
 
-  res.render("forgot-password");
+  res.render("forgotPassword");
 })
 
 export default router;

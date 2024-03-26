@@ -1,7 +1,7 @@
 import productsModel from "../models/products.model.js";
 
 class dbProductManager{
-    async getProducts(options, query, category, sortOrder) {
+      async getProducts(options, query, category, sortOrder) {
         try {
           let filtro = {};
     
@@ -9,7 +9,7 @@ class dbProductManager{
             filtro.$or = [
               { title: { $regex: new RegExp(query, 'i') } },
               { description: { $regex: new RegExp(query, 'i') } },
-              { $text: { $search: query } },
+              { $text: { $search: query } }
             ];
           }
     
@@ -26,7 +26,34 @@ class dbProductManager{
           console.error('Error al obtener productos desde MongoDB:', error.message);
           throw error;
         }
+      } 
+     /*  async getProducts (limit, page, sort, query) {
+      
+        
+        const options = {
+            page: parseInt(page, 10),
+            limit: parseInt(limit, 10),
+            lean: true,
+            sort: sort === 'desc' ? { price: -1 } : sort === 'asc' ? { price: 1 } : null
+        };
+
+        let filter = {};
+        if (query) {
+          filter = {
+              $or: [
+                  { title: { $regex: query, $options: 'i' } },
+                  { category: { $regex: query, $options: 'i' } },
+                  { status: query.toLowerCase() === 'true' }
+              ]
+          };
       }
+
+
+        const result = await productsModel.paginate(filter, options);
+        return result;
+       
+    }
+ */
    
     async addProduct(product){
         try{
