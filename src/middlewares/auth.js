@@ -1,11 +1,13 @@
 import  jwt from "jsonwebtoken";
 import  {config}  from "../config/config.js"
+import userModel from "../dao/models/users.model.js";
 
 export const checkRole = (roles)=>{
-    return (req,res,next) => {
-        if(!req.user){
+    return async (req,res,next) => {
+        if(!req.body.owner){
             return res.json({status:"error",message:"necesitas estar autenticado"});
         }
+        const userRoles = (await userModel.findById(req.body.owner)).rol
         if(!roles.includes(req.user.rol)){
             return res.json({status:"error",message:"no estas autorizado"});
         }

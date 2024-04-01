@@ -1,5 +1,6 @@
 import userModel from "../dao/models/users.model.js";
-import { createHash, validatePassword, emailSender } from "../utils.js";
+import { createHash, validatePassword } from "../utils.js";
+import { emailSender } from "../helpers/gmail.js";
 import { sendRecoveryPass,  } from "../helpers/gmail.js";
 import { generateEmailToken, verifyEmailToken } from "../utils.js";
 
@@ -25,10 +26,12 @@ async function login (req,res){
         return res.status(400).send({status:"error"})
     }
     req.session.user = {
+        user_id: req.user._id,
         first_name: req.user.first_name,
         last_name: req.user.last_name,
         age: req.user.age,
-        email: req.user.email
+        email: req.user.email,
+        rol: req.user.rol
     }
     res.send({status:"success", payload:req.user})
 }
@@ -95,6 +98,7 @@ async function restartPassword (req, res) {
 async function forgotPassword (req,res){
     try {
         const {email} = req.body;
+        console.log(email);
         const user = await userModel.findOne({email});
 
         if(!user){

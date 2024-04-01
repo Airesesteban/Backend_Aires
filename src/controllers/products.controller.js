@@ -30,10 +30,12 @@ async function getProducts(req, res)  {
     }
 
     async function addProduct (req, res) {
+        console.log("entro al try")
         try{
             const newProduct = req.body;
-            product.owner = req.user._id;
+           // newProduct.owner = req.user._id;
             const result = await ProductsService.addProduct(newProduct);
+            console.log("resultesto",result);
     
             res.send({
                 status: "success",

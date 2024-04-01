@@ -16,5 +16,9 @@ export const config = {
         emailToken:process.env.SECRET_TOKEN_EMAIL,
         adminAccount: process.env.ADMIN_EMAIL,
         adminPass: process.env.ADMIN_PASS
-        }
+        },
+    sender:{
+        emailsSender:process.env.SENDER_EMAIL,
+        passSender:process.env.SENDER_PASS
+    }
 }
