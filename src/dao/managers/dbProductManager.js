@@ -87,7 +87,7 @@ class dbProductManager{
 
     async deleteProduct(id){
         try{
-            const result = await productsModel.deleteOne({id:id})
+            const result = await productsModel.deleteOne({_id:id})
 
         }catch(error){
             console.error('Error al eliminar el producto',error)

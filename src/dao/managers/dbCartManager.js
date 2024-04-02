@@ -48,7 +48,7 @@
             throw new Error(`Carrito con ID ${cid} no encontrado.`);
           }
       
-          const existingProduct = cart.products.find((p) => p.product.toString() === productId.toString());
+          const existingProduct = cart.products.find((p) => p.product.toString() === pid.toString());
       
           if (existingProduct) {
             existingProduct.quantity += quantity;
@@ -62,9 +62,9 @@
             cart.products.push({ product: product._id, quantity });
           }
       
-          await cart.save();
+          return await cart.save();
       
-          return cart;
+          //return cart;
         } catch (error) {
           console.error('Error al agregar un producto al carrito en MongoDB:', error.message);
           throw error;
@@ -105,7 +105,9 @@
         if (!cart) {
           return(`Carrito con ID ${cid} no encontrado.`);
         }
-
+        if(cart.paid) {
+          return("EL carrito ya esta pago")
+        }
   
         cart.products = [];
 
@@ -121,9 +123,12 @@
     async updateCart(cid, updatedProducts) {
       try {
         const cart = await cartsModel.findOne({ _id: cid });
-    
+        
         if (!cart) {
           return(`Carrito con ID ${cid} no encontrado.`);
+        }
+        if(cart.paid) {
+          return("EL carrito ya esta pago")
         }
       
         cart.products = updatedProducts;
@@ -143,7 +148,11 @@
         if (!cart) {
           throw new Error(`Carrito con ID ${cid} no encontrado.`);
         }
-    
+        
+        if(cart.paid) {
+          return("EL carrito ya esta pago")
+        }
+        
         const product = cart.products.find((p) => p.id.toString() === pid.toString());
     
         if (!product) {
@@ -196,10 +205,14 @@
             const newTicket = {
                 code:uuidv4(),
                 purchase_datetime: moment().format(),
-                amount:500,
-                purchaser: req && req.user ? req.user.email : "Usuario no disponible"
+                amount:500,//total price
+                purchaser: req && req.user ? req.user.email : "Usuario no disponible",
+                products: ticketProducts
             }
             const ticketCreated = await ticketsModel.create(newTicket);
+            cart.paid=true;
+            cart.ticket = ticketCreated;
+            await cart.save();
             return ticketCreated;
         } else {
             return("el carrito no existe")

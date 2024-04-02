@@ -34,13 +34,15 @@ describe("Testing de app ecommerce", () => {
                 category: "electronica",
                 owner: "66074e3c07b5b404efd510db"
             }
-            const {body} = (await requester.post("api/products").send(prodMock));
+            const {body} = await requester.post("/api/products").send(prodMock);
+            expect(body.status).to.be.equal("success");
+            let response = await requester.get(`/api/products/${body.message._id}`)
 
-            //const responseDelete = await requester.delete(`/api/products/${body.payload._id}`)
+            const responseDelete =  await requester.delete(`/api/products/${body.message._id}`).send({owner: "66074e3c07b5b404efd510db"})
 
-            //const response = await requester.get(`/api/products/${body.payload._id}`)
+            response = await requester.get(`/api/products/${body.message._id}`)
 
-            expect(response.body.payload).to.be.equal(undefined);
+            expect(response.body.message).to.be.equal("Producto no encontrado");
         })
     })
 })

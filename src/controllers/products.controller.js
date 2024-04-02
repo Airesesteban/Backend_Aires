@@ -20,22 +20,24 @@ async function getProducts(req, res)  {
         const {pid} = req.params;
         try{
             const product = await ProductsService.getProductById(pid)
+            if(product){
             res.send({
                 status: "success",
                 message: product
             })
+            }else{
+                res.send({status: "error",errorCode:404, message: "Producto no encontrado"})
+            }
         }catch(error){
             console.error("Error al obtener producto",error)
         }
     }
 
     async function addProduct (req, res) {
-        console.log("entro al try")
         try{
             const newProduct = req.body;
            // newProduct.owner = req.user._id;
             const result = await ProductsService.addProduct(newProduct);
-            console.log("resultesto",result);
     
             res.send({
                 status: "success",
@@ -71,13 +73,11 @@ async function getProducts(req, res)  {
 
     async function deleteProduct (req, res) {
         try{
-            const productId = req.params;
-            const product = await ProductsService.getProductById(productId);
+            const {pid} = req.params;
+            const product = await ProductsService.getProductById(pid);
             if(product){
-                const productOwner = JSON.parse(JSON.stringify(product.owner));
-                const userId = JSON.parse(JSON.stringify(req.user._id));
-                if((req.user.rol === "premium" && productOwner == userId) || req.user.rol === "admin"){
-                    await ProductsService.deleteProduct(productId);
+                if(product.owner == req.body.owner) {
+                    await ProductsService.deleteProduct(pid);
                     return res.json({status:"success", message:"producto eliminado"});
                 }else {
                     res.json({status:"error", message:"no tienes permiso para borrar este producto"});

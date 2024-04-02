@@ -3,6 +3,7 @@ import { ProductsService } from "../repositories/index.js";
 import { EError } from "../enums/EError.js";
 import { CustomError } from "../services/customError.service.js";
 import { generateAddCartError } from "../services/cartError.service.js";
+import UserModel from "moongose/models/user_model.js";
 
 
 async function getCartById(req, res)  {
@@ -30,8 +31,8 @@ async function addCart (req, res) {
 
     if (newCart){
         res.send({
-            status:"succes",
-            msg:"Nuevo carrito agregado"
+            status:"success",
+            message:newCart
         })
     }else{
         CustomError.createError({
@@ -48,23 +49,23 @@ async function addProductToCart (req,res) {
     const pid = req.params.pid;
     const quantity = req.body.quantity;
 
-    const isPremium = req.user.premium;
+    const user = UserModel.findById(req.body.userID);
 
     try {
-        if (isPremium){
+        if (user.roles == "premium"){
             const product = await ProductsService.getProductById(pid);
             if(product.owner === req.user.id){
                 res.send({
                     status:"error",
-                    msg:"No puedes agregar tu propio producto al carrito"
+                    message:"No puedes agregar tu propio producto al carrito"
                 })
             }
         }
         const result = await CartsService.addProductToCart(cid, pid,quantity);
-
+        console.log("resultado",result)
         res.send({
             status:"succes",
-            msg: result
+            message: result
         })
     } catch (error) {
         console.error("Error al agregar producto al carrito:", error);
@@ -79,7 +80,7 @@ async function deleteProductCart (req,res) {
         const result = await CartsService.deleteProductCart(cid,pid)
             res.send({
                 status:"succes",
-                msg: result
+                message: result
             })
       } catch (error) {
         req.logger.info("Error al eliminar", error);
@@ -95,12 +96,12 @@ async function deleteAllProductsFromCart (req, res) {
       if (cart) {
         res.send({
             status:"succes",
-            msg: cart
+            message: cart
         })
       } else {
         res.send({
             status:"error",
-            msg: cart
+            message: cart
         })
       }
     } catch (error) {
@@ -117,7 +118,7 @@ async function deleteAllProductsFromCart (req, res) {
 
         res.send({
             status:"succes",
-            msg: result
+            message: result
         })
     } catch (error) {
         req.logger.warning("Error", error);
@@ -132,7 +133,7 @@ async function updateCart (req,res) {
     const result = await CartsService.updateCart(cid, updatedProducts);
     res.send({
         status:"succes",
-        msg: result
+        message: result
     })
   } catch (error) {
     req.logger.info("Error al actualizar", error);
@@ -147,7 +148,7 @@ async function purchase (req,res) {
     const result = await CartsService.purchase(cid, req);
     res.send({
         status:"succes",
-        msg: result
+        message: result
     })
   } catch (error) {
     req.logger.info("Error al comprar", error);
