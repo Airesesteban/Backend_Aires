@@ -45,14 +45,13 @@ describe("Testing de app ecommerce", () => {
             const response = await requester.get(`/api/carts/${body.message._id}`)
             expect(response.body.message.products).to.be.an('array').that.is.empty;
             //agregar un producto
-            const addedProduct = await requester.post(`/${body.message._id}/product/${createdProduct._id}/`).send({quantity:1,userId:userID});
-            console.log(addedProduct.body,"el body");
+            const addedProduct = await requester.post(`/api/carts/${body.message._id}/product/${createdProduct._id}`).send({quantity:1,userId:userID});
             expect(addedProduct.body.message.products).to.not.be.empty;
             //cambiar quantity a un producto
-            const updatedQuantity = await requester.put(`/${body.message._id}/product/${createdProduct._id}/`).send({quantity:1});
+            const updatedQuantity = await requester.put(`/api/carts/${body.message._id}/product/${createdProduct._id}/`).send({quantity:1,userId:userID});
             expect(updatedQuantity.body.message.products[0].quantity).to.equal(2);
             //purchase cart
-            const purchasedCartTicket = await requester.post(`/${body.message._id}/purchase/`);
+            const purchasedCartTicket = await requester.post(`/api/carts//${body.message._id}/purchase/`);
             expect(purchasedCartTicket.body.message.products).to.have.lengthOf(1);
             expect(purchasedCartTicket.body.message.products[0].quantity).to.equal(2);
             //chequear que el carro esta pago

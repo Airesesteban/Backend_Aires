@@ -42,7 +42,7 @@
 
       async addProductToCart(cid,pid,quantity){
         try {
-          const cart = await cartsModel.findOne({ id: cid });
+          const cart = await cartsModel.findOne({ _id: cid });
       
           if (!cart) {
             throw new Error(`Carrito con ID ${cid} no encontrado.`);
@@ -153,7 +153,9 @@
           return("EL carrito ya esta pago")
         }
         
-        const product = cart.products.find((p) => p.id.toString() === pid.toString());
+        const product = cart.products.find((p) => p._id === pid.toString());
+        console.log("cart product",cart.products._id)
+        console.log("pid",pid)
     
         if (!product) {
           throw new Error(`Producto con ID ${pid} no encontrado en el carrito.`);

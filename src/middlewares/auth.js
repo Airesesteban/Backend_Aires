@@ -7,7 +7,7 @@ export const checkRole = (roles)=>{
         if(!req.body.owner){
             return res.json({status:"error",message:"necesitas estar autenticado"});
         }
-        const userRoles = (await userModel.findById(req.body.owner)).rol
+        const userRoles = (await userModel.findById(req.body.owner)).roles
         if(!roles.includes(userRoles)){
             return res.json({status:"error",message:"no estas autorizado"});
         }

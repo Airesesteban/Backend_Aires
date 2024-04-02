@@ -49,7 +49,7 @@ async function addProductToCart (req,res) {
     const pid = req.params.pid;
     const quantity = req.body.quantity;
 
-    const user = UserModel.findById(req.body.userID);
+    const user = UserModel.findById(req.body.userId);
 
     try {
         if (user.roles == "premium"){
@@ -112,6 +112,8 @@ async function deleteAllProductsFromCart (req, res) {
   async function updateProductQuantity (req,res) {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
+
+    const user = UserModel.findById(req.body.userId);
 
     try {
         const result = await CartsService.updateProductQuantity(cid, pid, quantity);
