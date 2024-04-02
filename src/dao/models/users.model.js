@@ -12,7 +12,8 @@ const schema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref:"Carts"
     },
-    roles: { type: String, enum: ["admin", "usuario", "premium"], default: "usuario" }
+    roles: { type: String, enum: ["admin", "usuario", "premium"], default: "usuario" },
+    last_connection: Date
 });    
 
 const userModel = mongoose.model(collection, schema);

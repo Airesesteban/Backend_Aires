@@ -2,6 +2,8 @@ import {Router} from    "express";
 import passport from "passport";
 import { register, restartPassword, forgotPassword, gitHubCallBack, failRegister, login } from "../controllers/session.controller.js";
 import { GetUserDto }   from "../dao/dto/user.dto.js";
+import moment from "moment";
+import userModel from "../dao/models/users.model.js";
 
 const router =  Router();
 
@@ -23,7 +25,7 @@ router.get("/github", passport.authenticate("github",{scope:["user:email"]}), as
 router.get("/githubcallback", passport.authenticate("github",{failureRedirect:"/login"}),gitHubCallBack);
 
 
-router.get("/logout", (req, res) =>{
+router.get("/logout", async (req, res) =>{
     req.session.destroy(err=>{
         if(err){
             return res.status(500).send({
@@ -33,6 +35,8 @@ router.get("/logout", (req, res) =>{
         }
         res.redirect("/login")
     })
+    const last_connection = moment().format();
+    await userModel.updateOne({_id:req.user._id},{$set:{last_connection}});
 })
 
 router.post("/restartPassword",restartPassword);

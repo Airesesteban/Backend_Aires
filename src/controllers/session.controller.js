@@ -3,6 +3,7 @@ import { createHash, validatePassword } from "../utils.js";
 import { emailSender } from "../helpers/gmail.js";
 import { sendRecoveryPass,  } from "../helpers/gmail.js";
 import { generateEmailToken, verifyEmailToken } from "../utils.js";
+import moment from "moment";
 
 
 async function register(req, res)  {
@@ -31,8 +32,11 @@ async function login (req,res){
         last_name: req.user.last_name,
         age: req.user.age,
         email: req.user.email,
-        rol: req.user.rol
+        rol: req.user.rol,
+        
     }
+    const last_connection = moment().format();
+    await userModel.updateOne({_id:req.user._id},{$set:{last_connection}});
     res.send({status:"success", payload:req.user})
 }
 
