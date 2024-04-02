@@ -111,10 +111,7 @@
   
         cart.products = [];
 
-        await cart.save();
-
-        console.log(`Todos los productos del carrito con ID ${cid} han sido eliminados`);
-        return cart;
+        return await cart.save();
       } catch (error) {
         console.error(`Error al eliminar todos los productos del carrito con ID ${cid}`,error);
       }
@@ -133,9 +130,9 @@
       
         cart.products = updatedProducts;
     
-        await cart.save();
+        return await cart.save();
     
-        return cart;
+        //return cart;
       } catch (error) {
         console.error(`Error al actualizar el carrito con ID ${cid}`,error);
       }
@@ -152,10 +149,7 @@
         if(cart.paid) {
           return("EL carrito ya esta pago")
         }
-        
-        const product = cart.products.find((p) => p._id === pid.toString());
-        console.log("cart product",cart.products._id)
-        console.log("pid",pid)
+        const product = cart.products.find((p) => p.product.toString() === pid);
     
         if (!product) {
           throw new Error(`Producto con ID ${pid} no encontrado en el carrito.`);
@@ -168,10 +162,8 @@
       
         product.quantity = quantity;
     
-        await cart.save();
-        console.log('Después de la actualización:', cart);
+        return await cart.save();
     
-        return cart;
       } catch (error) {
         console.error(`Error al actualizar la cantidad del producto en el carrito`,error);
       }
@@ -179,7 +171,7 @@
     async purchase(cid, req){
       try {
 
-        const cart = await cartsModel.findOne({ id: cid });
+        const cart = await cartsModel.findOne({ _id: cid });
         if(cart){
             if(!cart.products.length){
                 return ("es necesario que agrege productos antes de realizar la compra")
@@ -189,11 +181,9 @@
 
             for(let i=0; i<cart.products.length;i++){
                 const cartProduct = cart.products[i];
-                console.log(`ID de Producto en el Carrito: ${cartProduct.id}`);
                 const productDB = await productsModel.findById(cartProduct.product);
-                console.log(productDB)
                 if (!productDB) {
-                  throw new Error(`Producto con ID ${cartProduct.id} no encontrado.`);
+                  throw new Error(`Producto con ID ${cartProduct.product} no encontrado.`);
                 }
                 if (cartProduct.quantity <= (productDB.stock || 0)){
                     ticketProducts.push(cartProduct);
@@ -201,9 +191,6 @@
                     rejectedProducts.push(cartProduct);
                 }
             }
-            console.log("ticketProducts",ticketProducts)
-            console.log("rejectedProducts",rejectedProducts)
-
             const newTicket = {
                 code:uuidv4(),
                 purchase_datetime: moment().format(),
@@ -212,7 +199,7 @@
                 products: ticketProducts
             }
             const ticketCreated = await ticketsModel.create(newTicket);
-            cart.paid=true;
+            cart.paid = true;
             cart.ticket = ticketCreated;
             await cart.save();
             return ticketCreated;

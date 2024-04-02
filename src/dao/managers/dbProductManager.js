@@ -59,7 +59,6 @@ class dbProductManager{
         try{
             const result = await productsModel.create(product);
 
-            console.log("Producto agregado")
             return result;
 
         }catch(error){

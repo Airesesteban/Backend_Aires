@@ -54,15 +54,14 @@ async function addProductToCart (req,res) {
     try {
         if (user.roles == "premium"){
             const product = await ProductsService.getProductById(pid);
-            if(product.owner === req.user.id){
+            if(product.owner === user.id){
                 res.send({
                     status:"error",
                     message:"No puedes agregar tu propio producto al carrito"
                 })
             }
         }
-        const result = await CartsService.addProductToCart(cid, pid,quantity);
-        console.log("resultado",result)
+        const result = await CartsService.addProductToCart(cid, pid, quantity);
         res.send({
             status:"succes",
             message: result
@@ -91,7 +90,7 @@ async function deleteAllProductsFromCart (req, res) {
     const { cid } = req.params;
   
     try {
-      const cart = await CartsService.deleteAllProductsFromCart({ id: cid });
+      const cart = await CartsService.deleteAllProductsFromCart({ _id: cid });
   
       if (cart) {
         res.send({
@@ -139,7 +138,6 @@ async function updateCart (req,res) {
     })
   } catch (error) {
     req.logger.info("Error al actualizar", error);
-    //console.error("Error al actualizar", error);
   }
 }
 
@@ -154,7 +152,6 @@ async function purchase (req,res) {
     })
   } catch (error) {
     req.logger.info("Error al comprar", error);
-    //console.error("Error al comprar", error);
   }
 }
 
