@@ -5,9 +5,9 @@
   "type": "module",
   "main": "Backend-Aires.js",
   "scripts": {
-    "test": "mocha src/test/carts.test.js --timeout 10000",
-    "test1": "mocha src/test/products.test.js --timeout 10000",
-    "test2": "mocha src/test/sessions.test.js --timeout 10000",
+    "cart-test": "mocha src/test/carts.test.js --timeout 10000",
+    "product-test": "mocha src/test/products.test.js --timeout 10000",
+    "session-test": "mocha src/test/sessions.test.js --timeout 10000",
     "start": "nodemon ./src/app.js"
   },
   "keywords": [],
