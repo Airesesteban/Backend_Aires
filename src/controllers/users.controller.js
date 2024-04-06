@@ -1,4 +1,5 @@
 import userModel from "../dao/models/users.model.js";
+import { GetUserDto } from "../dao/dto/user.dto.js";
 
 class UserController{
     static changeRol= async(req,res)=>{
@@ -23,4 +24,34 @@ class UserController{
     }
 }
 
-export {UserController}
+async function getAllUsers(req, res) {
+    try {
+        const usuarios = await userModel.find();
+        const usuariosDTO = [];
+
+        for(const usuario of usuarios) {
+            const usuarioDTO = new GetUserDto(usuario);
+            usuariosDTO.push(usuarioDTO);
+        }
+
+        return usuariosDTO;
+    } catch (error) {
+        req.logger.info("Error al obtener los usuarios", error);
+    }
+}
+
+async function deleteInactiveUsers(req, res) {
+    try {
+        const last2Days = new Date();
+        last2Days.setDate(last2Days.getDate() -2);
+
+        const eliminacion = await userModel.deleteMany({ last_connection: { $lt: dosDiasAtras } });
+
+        console.log(`${eliminacion.deletedCount} usuarios eliminados.`);
+        return eliminacion.deletedCount;
+    } catch (error) {
+        req.logger.info("Error al eliminar usuarios inactivos", error);
+    }
+}
+
+export {UserController, getAllUsers, deleteInactiveUsers}

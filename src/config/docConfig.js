@@ -11,7 +11,7 @@ const swaggerOptions = {
             description:"Definicion de endpoints para ecommerce"
         }
     },
-    apis:[`${path.join(__dirname,"../docs/**/*.yaml")}`],
+    apis:[`${path.join(__dirname,"./docs/**/*.yaml")}`],
 };
 
 

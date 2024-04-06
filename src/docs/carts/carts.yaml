@@ -232,7 +232,7 @@ components:
         _id: "60b494d1bc3f190015bdd9c3"
         products:
           - product: "60b494d1bc3f190015bdd9c4"
-          quantity: 2
+            quantity: 2
   requestBodies:
   UpdateCart:
     type: object
@@ -255,4 +255,4 @@ components:
       _id: "60b494d1bc3f190015bdd9c5"
       products:
         - product: "60b494d1bc3f190015bdd9c3"
-        quantity: 3       
+          quantity: 3       

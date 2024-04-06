@@ -1,6 +1,8 @@
 import {Router} from  "express";
 import { detalleCarrito, listaProductos, productos } from "../controllers/views.controller.js";
 import { verifyEmailTokenMW } from "../middlewares/auth.js"
+import { checkRole } from "../middlewares/auth.js";
+import { UserController, getAllUsers } from "../controllers/users.controller.js";
 
 const router = Router();
 
@@ -47,6 +49,11 @@ router.get("/resetPassword", verifyEmailTokenMW(), (req, res) => {
 router.get("/forgotPassword", (req,res)=>{
 
   res.render("forgotPassword");
+})
+
+router.get("/users",privateAccess, checkRole(["admin"]),getAllUsers,UserController, (req, res) => {
+  
+  res.render(users);
 })
 
 export default router;
