@@ -6,11 +6,11 @@ class UserController{
         try {  
             const userId =req.params.id;
             const user = await userModel.findById(userId);
-            const userRol= user.rol;
+            const userRol= user.roles;
             if(userRol === "usuario"){
-                user.rol = "premium"
+                user.roles = "premium"
             } else if(userRol === "premium"){
-                user.rol = "user"
+                user.rol = "usuario"
             }else{
                 return res.json({status:"error", message:"No es posible cambiar el rol"})
             }
@@ -33,8 +33,7 @@ async function getAllUsers(req, res) {
             const usuarioDTO = new GetUserDto(usuario);
             usuariosDTO.push(usuarioDTO);
         }
-
-        return usuariosDTO;
+        res.send({status:"success", message:usuariosDTO});
     } catch (error) {
         req.logger.info("Error al obtener los usuarios", error);
     }
@@ -42,16 +41,26 @@ async function getAllUsers(req, res) {
 
 async function deleteInactiveUsers(req, res) {
     try {
-        const last2Days = new Date();
-        last2Days.setDate(last2Days.getDate() -2);
+        const currentTime = new Date();
+        const last2Days = new Date(currentTime.getTime() - (2*24*60*60*1000));
 
-        const eliminacion = await userModel.deleteMany({ last_connection: { $lt: dosDiasAtras } });
+        const eliminacion = await userModel.deleteMany({ last_connection: { $lt: last2Days } });
 
-        console.log(`${eliminacion.deletedCount} usuarios eliminados.`);
-        return eliminacion.deletedCount;
+        res.send({status:"success", message:`usuarios eliminados ${eliminacion.deletedCount}`});
     } catch (error) {
         req.logger.info("Error al eliminar usuarios inactivos", error);
     }
 }
 
-export {UserController, getAllUsers, deleteInactiveUsers}
+async function deleteUser(req, res) {
+    try {
+        await userModel.deleteOne({ email: req.params.email });
+
+        res.send({status:"success", message:`usuario ${req.params.email} eliminado `});
+    } catch (error) {
+        req.logger.info("Error al eliminar usuarios inactivos", error);
+    }
+}
+
+
+export {UserController, getAllUsers, deleteInactiveUsers, deleteUser}

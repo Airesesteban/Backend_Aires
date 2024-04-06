@@ -67,4 +67,6 @@ async function productos (req, res)  {
     }
 }
 
+
+
 export{ listaProductos, productos, detalleCarrito };

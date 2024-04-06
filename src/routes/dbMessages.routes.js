@@ -4,6 +4,6 @@ import { checkRole } from "../middlewares/auth.js";
 
 const router = Router();
 
-router.get("/",checkRole(["user"]) ,getAllMessages);
+router.get("/",checkRole(["usuario"]) ,getAllMessages);
 
 export { router as dbMessageRouter}

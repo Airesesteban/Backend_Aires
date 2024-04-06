@@ -10,7 +10,7 @@ async function register(req, res)  {
     const respond = emailSender("airesesteban@gmail.com",'registro')
     console.log(respond);
 
-    res.json({
+    res.send({
         status:"success",
         message:"Registro exitoso"
     });
@@ -18,7 +18,6 @@ async function register(req, res)  {
 
 async function failRegister (req, res) {
     req.logger.http("Fallo en el registro", error);
-    //console.log("Fallo el registro");
     res.send({error: "Fallo el registro"})
 }
 
@@ -103,19 +102,18 @@ async function forgotPassword (req,res){
     try {
         const {email} = req.body;
         console.log(email);
-        const user = await userModel.findOne({email});
+        const user = await userModel.find({email: email});
 
         if(!user){
-            res.send(`<div>Error no existe el usuario, por favor vuelva a intentar: <a href="/forgot-password">Intente de nuevo</a></div>`)
+            res.send(`<div>Error no existe el usuario, por favor vuelva a intentar: <a href="/forgotPassword">Intente de nuevo</a></div>`)
         }
 
         const token= generateEmailToken(email, 10);
-        console.log('object');
         await sendRecoveryPass(email, token);
-        res.send("se Envio el correo de recuperacion de contraseña")
+        res.send({status: 'success', message: "Se envio el correo de recuperacion de contraseña"});
 
     } catch (error) {
-       res.send(`<div>Error,<a href="/forgot-password">Intente de nuevo</a></div>`) 
+       res.send(`<div>Error,<a href="/forgotPassword">Intente de nuevo</a></div>`) 
     }
 }
 
