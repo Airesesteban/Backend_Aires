@@ -30,6 +30,7 @@
     <p>Id: {{id}}</p>
     
     <button onclick="addToCart('{{id}}')">Agregar al Carrito</button>
+    <button onclick="deleteProduct('{{id}}')">Eliminar producto</button>
   </div>
 {{/each}}
 
@@ -43,5 +44,6 @@
 
     <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
     <script src="/js/addCart.js"></script>
+    <script src="/js/product.js"></script>
 </body>
 </html>

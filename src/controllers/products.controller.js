@@ -2,6 +2,7 @@ import { ProductsService } from "../repositories/index.js";
 import { EError } from "../enums/EError.js";
 import { CustomError } from "../services/customError.service.js";
 import { generateAddProductError } from "../services/productError.service.js";
+import { emailSender } from "../helpers/gmail.js";
 
 
 
@@ -66,7 +67,6 @@ async function getProducts(req, res)  {
             })
         } catch(error){
             req.logger.info("Error al actualizar producto", error);
-            //console.error("Error al actualizar productor".error)
         }
         
     }
@@ -76,19 +76,24 @@ async function getProducts(req, res)  {
             const {pid} = req.params;
             const product = await ProductsService.getProductById(pid);
             if(product){
-                if(product.owner == req.body.owner) {
+                if(product.owner == req.session.user._id || req.session.user.roles =="admin") {
                     await ProductsService.deleteProduct(pid);
+                    if(req.session.user.roles == "premium"){
+                        emailSender(req.session.user.email,"productoEliminado")
+                    }
                     return res.json({status:"success", message:"producto eliminado"});
                 }else {
+                    res.status(401);
                     res.json({status:"error", message:"no tienes permiso para borrar este producto"});
                 }
             }else{
+                res.status(404);
                 return res.json({status:"error", message:"El producto no existe"});
             }
         }catch(error){
+            res.status(500).send("Error al eliminar producto");
             req.logger.info("Error al eliminar producto", error);
         }
-     
     }
 
     export {

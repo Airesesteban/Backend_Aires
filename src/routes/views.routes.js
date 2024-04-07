@@ -1,8 +1,7 @@
 import {Router} from  "express";
-import { detalleCarrito, listaProductos, productos } from "../controllers/views.controller.js";
+import { detalleCarrito, listaProductos, productos, usuarios } from "../controllers/views.controller.js";
 import { verifyEmailTokenMW } from "../middlewares/auth.js"
 import { checkRole } from "../middlewares/auth.js";
-import { UserController, getAllUsers } from "../controllers/users.controller.js";
 
 const router = Router();
 
@@ -15,6 +14,13 @@ const publicAccess = (req,res,next) =>{
 const privateAccess = (req,res,next) =>{
   if(!req.session.user){
       return res.redirect('/login');
+  }
+  next();
+}
+
+const adminAccess = (req,res,next) =>{
+  if(!req.session.user.roles == "admin"){
+      return res.redirect('/products');
   }
   next();
 }
@@ -51,9 +57,6 @@ router.get("/forgotPassword", (req,res)=>{
   res.render("forgotPassword");
 })
 
-router.get("/users",privateAccess, checkRole(["admin"]),getAllUsers,UserController, (req, res) => {
-  
-  res.render(users);
-})
+router.get("/users",privateAccess,adminAccess, checkRole(["admin"]),usuarios);
 
 export default router;

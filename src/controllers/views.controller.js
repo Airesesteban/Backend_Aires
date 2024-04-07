@@ -1,5 +1,6 @@
 import { dbProductManager } from "../dao/managers/dbProductManager.js";
-import {dbCartManager} from "../dao/managers/dbCartManager.js";    
+import {dbCartManager} from "../dao/managers/dbCartManager.js"; 
+import { getAllUsers } from "./users.controller.js";   
 
 
 const productManager = new dbProductManager();
@@ -67,6 +68,16 @@ async function productos (req, res)  {
     }
 }
 
+async function usuarios (req, res)  {
+  try {
+    const result = await getAllUsers();
+
+    res.render('users', { users: result, user: req.session.user });
+  } catch (error) {
+    console.error('Error al obtener la lista de usuarios:', error.message);
+    res.status(500).send('Error interno del servidor');
+  }
+}
 
 
-export{ listaProductos, productos, detalleCarrito };
+export{ listaProductos, productos, detalleCarrito, usuarios };

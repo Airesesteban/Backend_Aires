@@ -9,7 +9,7 @@ import moment from "moment";
 async function register(req, res)  {
     const respond = emailSender("airesesteban@gmail.com",'registro')
     console.log(respond);
-
+    
     res.send({
         status:"success",
         message:"Registro exitoso"
@@ -26,12 +26,12 @@ async function login (req,res){
         return res.status(400).send({status:"error"})
     }
     req.session.user = {
-        user_id: req.user._id,
+        _id: req.user._id,
         first_name: req.user.first_name,
         last_name: req.user.last_name,
         age: req.user.age,
         email: req.user.email,
-        rol: req.user.rol,
+        roles: req.user.roles,
         
     }
     const last_connection = moment().format();
