@@ -24,7 +24,7 @@ async function changeRol (req,res) {
     }
 }
 
-
+//TO DO: chequear donde actualizar
 async function getAllUsers(req, res) {
     try {
         const usuarios = await userModel.find();
@@ -34,7 +34,7 @@ async function getAllUsers(req, res) {
             const usuarioDTO = new GetUserDto(usuario);
             usuariosDTO.push(usuarioDTO);
         }
-        return usuariosDTO;
+        res.send({status:"success", message: usuariosDTO})
     } catch (error) {
         console.error("Error al obtener los usuarios", error);
     }
@@ -71,5 +71,17 @@ async function deleteUser(req, res) {
     }
 }
 
+async function getUserCart(req, res) {
+    try {
+        const userId =req.params.uid;
+        const userCart = (await userModel.findById(userId)).cart;
 
-export {changeRol, getAllUsers, deleteInactiveUsers, deleteUser}
+        res.send({status:"success", message: userCart})
+    } catch (error) {
+        console.error("Error al obtener el carrito", error);
+    }
+}
+
+
+
+export {changeRol, getAllUsers, deleteInactiveUsers, deleteUser, getUserCart}

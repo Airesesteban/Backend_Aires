@@ -13,6 +13,8 @@
     <p>{{user.email}}</p>
     <p>{{user.age}}</p>
     <p>{{user.rol}}</p>
+    <p>{{user.ca}}</p>
+    <a href="/carts/{{user.cart_id}}"><button>Ver carrito</button></a>
     <a href="/api/sessions/logout"><button>Logout</button></a>
 </div>
 <h2>Lista de Productos</h2>
@@ -29,8 +31,8 @@
     <p>Categoría: {{category}}</p>
     <p>Id: {{id}}</p>
     
-    <button onclick="addToCart('{{id}}')">Agregar al Carrito</button>
-    <button onclick="deleteProduct('{{id}}')">Eliminar producto</button>
+    <button onclick="addProductToCart('{{cid}}','{{id}}')">Agregar al Carrito</button>
+    <button onclick="deleteProduct('{{id}}')">Eliminar producto del listado</button>
   </div>
 {{/each}}
 
@@ -43,7 +45,7 @@
 {{/if}}
 
     <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
-    <script src="/js/addCart.js"></script>
+    <script src="/js/cart.js"></script>
     <script src="/js/product.js"></script>
 </body>
 </html>

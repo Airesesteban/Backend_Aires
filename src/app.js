@@ -66,10 +66,9 @@ app.use(passport.session());
 
 app.use("/api/docs" ,swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
+app.use("/", viewRouter);
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
-app.use("/", viewRouter);
-
 app.use("/api/FsProducts", FsProductRouter);
 app.use("/api/FsCarts", FsCartRouter);
 app.use("/api/dbMessages", dbMessageRouter);

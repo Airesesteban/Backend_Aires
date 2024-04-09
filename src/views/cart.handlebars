@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Carrito</title>
 </head>
 <body>
     
@@ -16,10 +16,16 @@
   {{#each cart.products}}
     <li>
       <p>Producto: {{ this.product.title }}</p>
+      <p>Descripción: {{this.product.description}}</p> 
       <p>Cantidad: {{ this.quantity }}</p>
-      <p>Descripción: {{this.description}}</p>       
+      <button onclick="updateProductQuantity('{{cart.id}}','{{this.product.id}}','{{this.quantity + 1}}')">+</button>
+      <button onclick="updateProductQuantity('{{cart.id}}','{{this.product.id}}','{{this.quantity - 1}}')">-</button>  
+      <button onclick="deleteProduct('{{cart.id}}','{{this.product.id}}')">Eliminar producto</button> 
     </li>
   {{/each}}
 </ul>
+      <button onclick="deleteAllProducts('{{cart.id}}')">Vaciar carrito</button> 
+      <button onclick="purchase('{{cart.id}}')">Realizar compra</button>  
+<script src="/js/cart.js"></script>
 </body>
 </html>
