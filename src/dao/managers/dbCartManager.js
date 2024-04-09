@@ -3,6 +3,7 @@
   import {v4 as uuidv4} from 'uuid';
   import ticketsModel from "../models/tickets.model.js";
   import moment from 'moment';
+  import mongoose from 'mongoose';
 
   class dbCartManager{
 
@@ -20,7 +21,8 @@
           try {
             const cart = await cartsModel
             .findOne({ _id: id })
-            .populate('products.product');
+            .populate('products.product')
+            .lean();
               return cart;
           }
           catch(error){
@@ -81,7 +83,7 @@
           }
           const cart = await cartsModel.findById(cid);
           if (cart) {
-              const index = cart.products.findIndex(prod => prod.id_prod._id == pid);
+              const index = cart.products.findIndex(prod => prod._id == pid);
               if (index!== -1) {
                   const deletedProduct = cart.products[index];
                   cart.products.splice(index, 1);

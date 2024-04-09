@@ -54,9 +54,8 @@ async function productos (req, res)  {
   
     try {
       const cart = await cartManager.getCartById(cid);
-      console.log(cart);
       if (cart) {
-        res.render('cart', { cart: cart });
+        res.render('cart',  { cart });
       } else {
         res.send({
             status:"error",
