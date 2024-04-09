@@ -1,7 +1,6 @@
 import { dbProductManager } from "../dao/managers/dbProductManager.js";
 import {dbCartManager} from "../dao/managers/dbCartManager.js"; 
 import { getAllUsers } from "./users.controller.js";   
-import { getCartByUserId} from "../public/js/cart.js";
 
 
 const productManager = new dbProductManager();
@@ -43,9 +42,6 @@ async function productos (req, res)  {
         prevLink: result.hasPrevPage ? `/products?limit=${limit}&page=${result.prevPage}` : null,
         nextLink: result.hasNextPage ? `/products?limit=${limit}&page=${result.nextPage}` : null,
       };
-      const cartId = await getCartByUserId(req.session.user._id);
-      req.session.user.cart_id = cartId;
-      console.log("usuario",req.session.user);
       res.render('products', { products: response, user: req.session.user });
     } catch (error) {
       console.error('Error al obtener la lista de productos:', error.message);
@@ -58,9 +54,9 @@ async function productos (req, res)  {
   
     try {
       const cart = await cartManager.getCartById(cid);
-  
+      console.log(cart);
       if (cart) {
-        res.render('cart', { cart });
+        res.render('cart', { cart: cart });
       } else {
         res.send({
             status:"error",

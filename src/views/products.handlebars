@@ -13,28 +13,28 @@
     <p>{{user.email}}</p>
     <p>{{user.age}}</p>
     <p>{{user.rol}}</p>
-    <p>{{user.ca}}</p>
+    <p>{{user.cart_id}}</p>
     <a href="/carts/{{user.cart_id}}"><button>Ver carrito</button></a>
     <a href="/api/sessions/logout"><button>Logout</button></a>
 </div>
 <h2>Lista de Productos</h2>
 
-{{#each products.payload}}
-  <div>
-    <p>Título: {{title}}</p>
-    <p>Descripción: {{description}}</p>
-    <p>Precio: {{price}}</p>
-    <p>Thumbnail: {{thumbnail}}</p>
-    <p>Código: {{code}}</p>
-    <p>Stock: {{stock}}</p>
-    <p>Estado: {{status}}</p>
-    <p>Categoría: {{category}}</p>
-    <p>Id: {{id}}</p>
-    
-    <button onclick="addProductToCart('{{cid}}','{{id}}')">Agregar al Carrito</button>
-    <button onclick="deleteProduct('{{id}}')">Eliminar producto del listado</button>
-  </div>
-{{/each}}
+  {{#each products.payload}}
+    <div>
+      <p>Título: {{title}}</p>
+      <p>Descripción: {{description}}</p>
+      <p>Precio: {{price}}</p>
+      <p>Thumbnail: {{thumbnail}}</p>
+      <p>Código: {{code}}</p>
+      <p>Stock: {{stock}}</p>
+      <p>Estado: {{status}}</p>
+      <p>Categoría: {{category}}</p>
+      <p>Id: {{id}}</p>
+      
+      <button onclick="addProductToCart('{{../user.cart_id}}','{{id}}')">Agregar al Carrito</button>
+      <button onclick="deleteProduct('{{id}}')">Eliminar producto del listado</button>
+    </div>
+  {{/each}}
 
 {{#if products.hasPrevPage}}
   <a href="{{products.prevLink}}">Página anterior</a>

@@ -32,7 +32,7 @@ async function login (req,res){
         age: req.user.age,
         email: req.user.email,
         roles: req.user.roles,
-        
+        cart_id: req.user.cart._id
     }
     const last_connection = moment().format();
     await userModel.updateOne({_id:req.user._id},{$set:{last_connection}});

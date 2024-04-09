@@ -41,6 +41,7 @@
   }
 
   function addProductToCart(cid,pid) {
+    console.log(cid,pid);
     fetch(`/api/carts/${cid}/product/${pid}`, {
         method: 'POST',
       headers: {
@@ -147,10 +148,3 @@
         console.error('Error al comprar carrito:', error);
       });
   }
-
-router.get('/:cid',getCartById);
-router.delete('/:cid/product/:pid', deleteProductCart);
-router.delete("/:cid",deleteAllProductsFromCart);
-router.put('/:cid/product/:pid',updateProductQuantity);
-router.post('/:cid/purchase',purchase);
-//router.put('/:cid',updateCart);
