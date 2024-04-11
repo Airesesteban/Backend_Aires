@@ -15,7 +15,7 @@ async function changeRol (req,res) {
             return res.json({status:"error", message:"No es posible cambiar el rol"})
         }
         await userModel.updateOne({_id:user._id},user);
-        emailSender (user.email,"cambioDeRol",user.roles);
+        await emailSender (user.email,"cambioDeRol",user.roles);
         res.send({status:"success", message:"Rol modificado"});  
         
     } catch (error) {
@@ -47,7 +47,7 @@ async function deleteInactiveUsers(req, res) {
         const eliminacion = await userModel.deleteMany({ last_connection: { $lt: last2Days } });
         
         for(const user of eliminacion) {
-            emailSender(user.email,"UsuarioEliminado");
+            await emailSender(user.email,"UsuarioEliminado");
         };
 
         res.send({status:"success", message:`usuarios eliminados ${eliminacion.deletedCount}`});
@@ -63,7 +63,7 @@ async function deleteUser(req, res) {
            throw new Error("No puedes eliminar un admin");
         }
         await userModel.deleteOne({ _id: req.params.uid });
-        emailSender(user.email,"UsuarioEliminado");
+         await emailSender(user.email,"UsuarioEliminado");
         res.send({status:"success", message:`usuario ${req.params.uid} eliminado `});
     } catch (error) {
         req.logger.error("Error al eliminar usuario", error.message);

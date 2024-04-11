@@ -79,7 +79,7 @@ async function getProducts(req, res)  {
                 if(product.owner == req.session.user._id || req.session.user.roles =="admin") {
                     await ProductsService.deleteProduct(pid);
                     if(req.session.user.roles == "premium"){
-                        emailSender(req.session.user.email,"productoEliminado")
+                       await emailSender(req.session.user.email,"productoEliminado")
                     }
                     return res.json({status:"success", message:"producto eliminado"});
                 }else {

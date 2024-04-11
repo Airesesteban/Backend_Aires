@@ -211,7 +211,7 @@ import { emailSender } from "../../helpers/gmail.js";
             cart.paid = true;
             cart.ticket = ticketCreated;
             await cart.save();
-            emailSender(user.email,"ticket", newTicket);
+             await emailSender(user.email,"ticket", newTicket);
             await this.deleteAllProductsFromCart(cid);
             return ticketCreated;
         } else {

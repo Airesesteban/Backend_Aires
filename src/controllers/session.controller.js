@@ -7,7 +7,7 @@ import moment from "moment";
 
 
 async function register(req, res)  {
-    const respond = emailSender("airesesteban@gmail.com",'registro')
+    const respond = await emailSender("airesesteban@gmail.com",'registro')
     console.log(respond);
     
     res.send({
@@ -41,7 +41,7 @@ async function login (req,res){
 
 async function gitHubCallBack(req, res){
     req.session.user = req.user;
-    res.redirect("/")
+    res.redirect("/login")
 }
 
 async function resetPassword (req, res) {
