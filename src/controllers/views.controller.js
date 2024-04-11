@@ -8,8 +8,8 @@ const cartManager = new dbCartManager();
 
 async function listaProductos (req, res)  {
     try{
-        const listadeproductos = await productManager.getProducts({}, { limit: 10, page: 1, sort: 'asc' });
-        res.render("home",{listadeproductos}, {user:req.session.user})
+        //const listadeproductos = await productManager.getProducts({}, { limit: 10, page: 1, sort: 'asc' });
+        res.render("login",/* {listadeproductos}, {user:req.session.user} */)
     }catch(error){
         console.error('Error al obtener la lista de productos:', error);
     }

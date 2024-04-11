@@ -25,7 +25,7 @@ const adminAccess = (req,res,next) =>{
   next();
 }
 
-router.get("/",privateAccess,listaProductos);
+router.get("/",publicAccess,listaProductos);
 
 router.get('/products',privateAccess,productos);
 
