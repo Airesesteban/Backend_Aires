@@ -62,9 +62,6 @@ async function resetPassword (req, res) {
         if(!user){
             return res.send("el Usuario no esta registrado")   
         }
-     /*    const newPasswordHashed = createHash(newPassword); // Hashea la nueva contraseña
-        user.password = newPasswordHashed; // Asigna la contraseña hasheada al usuario antes de guardarla en la base de datos
-        await user.save();  */
         if(validatePassword(newPassword,user)){
             return res.send("no se puede usar la misma contraseña")
         }
