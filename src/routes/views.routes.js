@@ -47,7 +47,7 @@ router.get("/login", publicAccess, (req, res) => {
     res.render('login');
 })
 
-router.get("/resetPassword", verifyEmailTokenMW(), (req, res) => {
+router.get("/resetPassword", verifyEmailTokenMW, (req, res) => {
   const token = req.query.token;
   res.render('resetPassword',{token});
 })

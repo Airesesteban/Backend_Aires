@@ -110,9 +110,7 @@
       headers: {
         'Content-Type': 'application/json',
       },
-      body:{
-        quantity,
-      }
+      body: JSON.stringify({quantity})
     })
     .then(response => {
         if (!response.ok) {

@@ -9,11 +9,10 @@
 
 <div>
     <h1>Bienvenido!</h1>
-    <p>{{user.full_name}}</p>
-    <p>{{user.email}}</p>
-    <p>{{user.age}}</p>
-    <p>{{user.rol}}</p>
-    <p>{{user.cart_id}}</p>
+    <p>Nombre: {{user.first_name}} {{user.last_name}}</p>
+    <p>Email: {{user.email}}</p>
+    <p>Edad: {{user.age}}</p>
+    <p>Tipo de usuario: {{user.roles}}</p>
     <a href="/carts/{{user.cart_id}}"><button>Ver carrito</button></a>
     <a href="/api/sessions/logout"><button>Logout</button></a>
 </div>

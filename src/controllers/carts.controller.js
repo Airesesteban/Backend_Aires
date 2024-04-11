@@ -112,10 +112,8 @@ async function deleteAllProductsFromCart (req, res) {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
 
-    const user = UserModel.findById(req.body.userId);
-
     try {
-        const result = await CartsService.updateProductQuantity(cid, pid, quantity);
+        const result = await CartsService.updateProductQuantity(cid, pid, Number.parseInt(quantity));
 
         res.send({
             status:"succes",

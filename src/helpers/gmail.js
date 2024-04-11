@@ -57,6 +57,23 @@ export const emailSender = async (emailUsu, tipo,objectId) => {
             <h1>Su rol ha cambiado a ${objectId}</h1>
             </div>`;
             break; 
+
+            case "ticket":
+            subject = "Gracias por su compra!" 
+            emailTemplate = `<div>
+            <h1>Su ticket de compra</h1>
+            <p>Ticket numero: ${objectId.code}</p>
+            <p>Fecha: ${objectId.purchase_datetime}</p>
+            <p>Precio total: ${objectId.amount}</p>
+            <p>Usuario: ${objectId.purchaser}</p>
+            <p>Productos</p>
+            <ul>`
+            console.log(objectId)
+            objectId.products.forEach(p => {
+                emailTemplate += `<li>${p.product.title} ${p.quantity} ${p.product.price * p.quantity}</li>` 
+            });
+            emailTemplate += `</ul> </div>`
+            break; 
         }
 
         const contenido = await transporter.sendMail({
@@ -79,7 +96,7 @@ export const emailSender = async (emailUsu, tipo,objectId) => {
 // funcion envio de recuperacion de contraseña
 
 export const sendRecoveryPass = async (userEmail, token) => {
-    const link = `http://localhost:8080/restartPassword?token=${token}`;
+    const link = `http://localhost:8080/resetPassword?token=${token}`;
     await transporter.sendMail({
         from:emailsSender,
         to:userEmail,

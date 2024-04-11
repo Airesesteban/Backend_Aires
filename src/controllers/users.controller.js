@@ -24,7 +24,6 @@ async function changeRol (req,res) {
     }
 }
 
-//TO DO: chequear donde actualizar
 async function getAllUsers(req, res) {
     try {
         const usuarios = await userModel.find();
@@ -34,7 +33,7 @@ async function getAllUsers(req, res) {
             const usuarioDTO = new GetUserDto(usuario);
             usuariosDTO.push(usuarioDTO);
         }
-        res.send({status:"success", message: usuariosDTO})
+        return usuariosDTO
     } catch (error) {
         console.error("Error al obtener los usuarios", error);
     }

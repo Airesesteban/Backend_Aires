@@ -1,9 +1,11 @@
   import cartsModel from "../models/carts.model.js"; 
+  import userModel from "../models/users.model.js";
   import productsModel from "../models/products.model.js";
   import {v4 as uuidv4} from 'uuid';
   import ticketsModel from "../models/tickets.model.js";
   import moment from 'moment';
   import mongoose from 'mongoose';
+import { emailSender } from "../../helpers/gmail.js";
 
   class dbCartManager{
 
@@ -83,7 +85,7 @@
           }
           const cart = await cartsModel.findById(cid);
           if (cart) {
-              const index = cart.products.findIndex(prod => prod._id == pid);
+              const index = cart.products.findIndex(prod => prod.product._id == pid);
               if (index!== -1) {
                   const deletedProduct = cart.products[index];
                   cart.products.splice(index, 1);
@@ -107,9 +109,9 @@
         if (!cart) {
           return(`Carrito con ID ${cid} no encontrado.`);
         }
-        if(cart.paid) {
+      /*   if(cart.paid) {
           return("EL carrito ya esta pago")
-        }
+        } */
   
         cart.products = [];
 
@@ -126,9 +128,9 @@
         if (!cart) {
           return(`Carrito con ID ${cid} no encontrado.`);
         }
-        if(cart.paid) {
+       /*  if(cart.paid) {
           return("EL carrito ya esta pago")
-        }
+        } */
       
         cart.products = updatedProducts;
     
@@ -148,9 +150,9 @@
           throw new Error(`Carrito con ID ${cid} no encontrado.`);
         }
         
-        if(cart.paid) {
+       /*  if(cart.paid) {
           return("EL carrito ya esta pago")
-        }
+        } */
         const product = cart.products.find((p) => p.product.toString() === pid);
     
         if (!product) {
@@ -158,11 +160,14 @@
         }
     
         
-        if (typeof quantity !== 'number' || quantity < 0) {
-          throw new Error('La cantidad debe ser un número positivo.');
+        if (typeof quantity !== 'number') {
+          throw new Error('La cantidad debe ser un número.');
         }
-      
-        product.quantity = quantity;
+        product.quantity += quantity;
+
+        if(product.quantity < 0){
+          throw new Error('La cantidad debe ser menor a 0.');
+        }
     
         return await cart.save();
     
@@ -170,16 +175,17 @@
         console.error(`Error al actualizar la cantidad del producto en el carrito`,error);
       }
     }
-    async purchase(cid, req){
+    async purchase(cid){
       try {
-
-        const cart = await cartsModel.findOne({ _id: cid });
+        const user = await userModel.findOne({cart: cid});
+        const cart = await cartsModel.findOne({ _id: cid }).populate("products.product");;
         if(cart){
             if(!cart.products.length){
                 return ("es necesario que agrege productos antes de realizar la compra")
             }
             const ticketProducts = [];
             const rejectedProducts = [];
+            let totalPrice = 0;
 
             for(let i=0; i<cart.products.length;i++){
                 const cartProduct = cart.products[i];
@@ -187,8 +193,9 @@
                 if (!productDB) {
                   throw new Error(`Producto con ID ${cartProduct.product} no encontrado.`);
                 }
-                if (cartProduct.quantity <= (productDB.stock || 0)){
+                if (cartProduct.quantity && cartProduct.quantity <= (productDB.stock)){
                     ticketProducts.push(cartProduct);
+                    totalPrice = totalPrice + (cartProduct.product.price * cartProduct.quantity);
                 } else {
                     rejectedProducts.push(cartProduct);
                 }
@@ -196,14 +203,16 @@
             const newTicket = {
                 code:uuidv4(),
                 purchase_datetime: moment().format(),
-                amount:500,//total price
-                purchaser: req && req.user ? req.user.email : "Usuario no disponible",
+                amount: totalPrice,
+                purchaser: user ?  user.email:"Usuario no disponible",
                 products: ticketProducts
             }
             const ticketCreated = await ticketsModel.create(newTicket);
             cart.paid = true;
             cart.ticket = ticketCreated;
             await cart.save();
+            emailSender(user.email,"ticket", newTicket);
+            await this.deleteAllProductsFromCart(cid);
             return ticketCreated;
         } else {
             return("el carrito no existe")

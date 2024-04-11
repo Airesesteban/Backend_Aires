@@ -9,7 +9,7 @@
     
 <h1>Detalles del Carrito</h1>
 
-<p>ID del Carrito: {{ cart._id}}</p>
+<a href="/products"><button>Seguir comprando</button></a>
 
 <h2>Productos en el Carrito:</h2>
 {{#if cart.products.length}}
@@ -19,8 +19,8 @@
       <p>Producto: {{ this.product.title }}</p>
       <p>Descripción: {{this.product.description}}</p>
       <p>Cantidad: {{ this.quantity }}</p>
-      <button onclick="updateProductQuantity('{{../cart._id}}','{{this.product._id}}','{{this.quantity}}+1')">+</button>
-      <button onclick="updateProductQuantity('{{../cart._id}}','{{this.product._id}}','{{this.quantity}}-1')">-</button>  
+      <button onclick="updateProductQuantity('{{../cart._id}}','{{this.product._id}}','+1')">+</button>
+      <button onclick="updateProductQuantity('{{../cart._id}}','{{this.product._id}}','-1')">-</button>  
       <button onclick="deleteProduct('{{../cart._id}}','{{this.product._id}}')">Eliminar producto</button> 
     </li>
   {{/each}}

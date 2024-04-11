@@ -14,7 +14,7 @@ export const checkRole = (roles)=>{
 }
 
 export const verifyEmailTokenMW = () =>{
-    return (req,res,next) => {
+    return async (req,res,next) => {
         try {
             const jwtToken = req.query.token;
             const decoded = jwt.decode(jwtToken);
