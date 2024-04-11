@@ -44,9 +44,10 @@ async function gitHubCallBack(req, res){
     res.redirect("/")
 }
 
-async function restartPassword (req, res) {
+async function resetPassword (req, res) {
   
   try {
+    console.log("token",req.query.token)
     const token = req.query.token;
 
         const {email, newPassword} = req.body;
@@ -61,7 +62,9 @@ async function restartPassword (req, res) {
         if(!user){
             return res.send("el Usuario no esta registrado")   
         }
-
+     /*    const newPasswordHashed = createHash(newPassword); // Hashea la nueva contraseña
+        user.password = newPasswordHashed; // Asigna la contraseña hasheada al usuario antes de guardarla en la base de datos
+        await user.save();  */
         if(validatePassword(newPassword,user)){
             return res.send("no se puede usar la misma contraseña")
         }
@@ -75,46 +78,26 @@ async function restartPassword (req, res) {
     
   } catch (error) {
     console.log(error);
-        res.send(`<div>Error, contectese con el administrador.</div>`)
+        res.send(`<div>Error, contactese con el administrador.</div>`)
   }
-  
-  
-    /*   const {email,password} = req.body;
-    if(!email || !password) return res.status(400).send({
-                status: "error",
-                message: "Datos incorrectos"
-            })
-    const user = await userModel.findOne({email});
-    if(!user) return res.status(400).send({
-        status: "error",
-        message: "No existe el usuario"
-    })
-    const newHashPassword = createHash(password);
-
-    await userModel.updateOne({id:user.id},{$set:{password:newHashPassword}});
-    res.send({
-        status: "success",
-        message: "Contraseña restaurada"
-    }) */
 }
 
 async function forgotPassword (req,res){
     try {
         const {email} = req.body;
-        console.log(email);
         const user = await userModel.find({email: email});
 
         if(!user){
             res.send(`<div>Error no existe el usuario, por favor vuelva a intentar: <a href="/forgotPassword">Intente de nuevo</a></div>`)
         }
 
-        const token= generateEmailToken(email, 10);
+        const token= generateEmailToken(email, 60*3);
         await sendRecoveryPass(email, token);
         res.send({status: 'success', message: "Se envio el correo de recuperacion de contraseña"});
 
     } catch (error) {
-       res.send(`<div>Error,<a href="/forgotPassword">Intente de nuevo</a></div>`) 
+       res.send(`<div>Error,<a href="/forgot-password">Intente de nuevo</a></div>`) 
     }
 }
 
-export{register,failRegister,login,gitHubCallBack,restartPassword,forgotPassword}
+export{register,failRegister,login,gitHubCallBack,resetPassword,forgotPassword}

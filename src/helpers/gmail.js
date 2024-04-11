@@ -96,7 +96,7 @@ export const emailSender = async (emailUsu, tipo,objectId) => {
 // funcion envio de recuperacion de contraseña
 
 export const sendRecoveryPass = async (userEmail, token) => {
-    const link = `http://localhost:8080/resetPassword?token=${token}`;
+    const link = `http://localhost:8080/reset-password?token=${token}`;
     await transporter.sendMail({
         from:emailsSender,
         to:userEmail,

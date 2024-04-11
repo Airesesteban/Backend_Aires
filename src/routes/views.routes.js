@@ -47,12 +47,12 @@ router.get("/login", publicAccess, (req, res) => {
     res.render('login');
 })
 
-router.get("/resetPassword", verifyEmailTokenMW, (req, res) => {
+router.get("/reset-password", verifyEmailTokenMW(), (req, res) => {
   const token = req.query.token;
   res.render('resetPassword',{token});
 })
 
-router.get("/forgotPassword", (req,res)=>{
+router.get("/forgot-password", (req,res)=>{
 
   res.render("forgotPassword");
 })

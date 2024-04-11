@@ -23,8 +23,6 @@ export const generateProduct = () => {
     };
 };
 
-
-
 export const generateEmailToken = (email,expireTime)=>{
     const token = jwt.sign({email},config.gmail.emailToken,{expiresIn:expireTime}); 
     return token;

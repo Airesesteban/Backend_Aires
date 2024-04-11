@@ -1,6 +1,6 @@
 import {Router} from    "express";
 import passport from "passport";
-import { register, restartPassword, forgotPassword, gitHubCallBack, failRegister, login } from "../controllers/session.controller.js";
+import { register, resetPassword, forgotPassword, gitHubCallBack, failRegister, login } from "../controllers/session.controller.js";
 import { GetUserDto }   from "../dao/dto/user.dto.js";
 import moment from "moment";
 import userModel from "../dao/models/users.model.js";
@@ -39,9 +39,9 @@ router.get("/logout", async (req, res) =>{
     await userModel.updateOne({_id:req.user._id},{$set:{last_connection}});
 })
 
-router.post("/restartPassword",restartPassword);
+router.post("/reset-password",resetPassword);
 
-router.post("/forgotPassword",forgotPassword);
+router.post("/forgot-password",forgotPassword);
 
 
 router.get("/current", (req, res) => {
